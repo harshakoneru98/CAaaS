@@ -10,11 +10,11 @@
  */
 
 
-function Main(props) {
+function HomeView(props) {
     // some implementation
     return (
-        <div id="root">Sample Template</div>
+        <div id="root">Sample Template Home</div>
     )
 }
 
-export default Main
+export default HomeView

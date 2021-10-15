@@ -3,12 +3,12 @@
  * We should leverage the components created at src/Views here for better abstraction
  */
 
-import Main from '../../src/views/home/main';
+import HomeView from '../../src/views/home/home_view';
 
 
 function Home() {
     return (
-        <Main demo="demo prop" />
+        <HomeView demo="demo prop" />
     )
 }
 
