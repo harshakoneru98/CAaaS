@@ -6,7 +6,6 @@ import React from "react";
 import logo from "../public/assets/logo.jpg";
 
 export default function Main() {
-  console.log(logo);
   return (
     <div className="container main-container">
       <div className="row">

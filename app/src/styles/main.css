@@ -39,6 +39,8 @@
 
 .main_content .content{
     margin-left: 8vw;
+    margin-right: 2vw;
+    text-align: justify;
 }
 
 .main_content .content img{
