@@ -1,8 +1,6 @@
 function LoginView(props) {
     // some implementation
-    return (
-        <div id="root">Login Page</div>
-    )
+    return <div id="root">Login Page</div>;
 }
 
-export default LoginView
+export default LoginView;

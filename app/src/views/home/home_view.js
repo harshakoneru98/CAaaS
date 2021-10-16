@@ -9,12 +9,9 @@
  * Contextual Playground for POC etc.
  */
 
-
 function HomeView(props) {
     // some implementation
-    return (
-        <div id="root">Sample Template Home</div>
-    )
+    return <div id="root">Sample Template Home</div>;
 }
 
-export default HomeView
+export default HomeView;
