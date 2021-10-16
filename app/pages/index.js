@@ -14,13 +14,15 @@ export default function Main() {
           <div className="content">
             <img src={logo.src} />
             <p>
-              Content Content Content Content Content Content Content Content
-              Content Content Content Content Content Content Content Content
-              Content Content Content Content Content Content Content Content
-              Content Content Content Content Content Content Content Content
-              Content Content Content Content Content Content Content Content
-              Content Content Content Content Content Content Content Content
-              Content
+              A public interest initiative powered by AI with key objectives of
+              <ul>
+                <li>Keeping People Healthy</li>
+                <li>Optimizing Care</li>
+                <li>Focusing on Priority Populations</li>
+              </ul>
+              This platform is for helping people evaluate their clinical risk
+              score related to heart stroke and take preventive measures for
+              mitigating the risk of a cardiac arrest or stroke.
             </p>
             <a class="btn btn-primary" href="#" role="button">
               Personal
