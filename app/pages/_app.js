@@ -3,6 +3,7 @@
  * TODO: Inject the styles defined into this root app
  */
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'react-datepicker/dist/react-datepicker.css';
 import '../src/styles/main.css';
 import '../src/styles/auth.css';
 import '../src/styles/app.css';

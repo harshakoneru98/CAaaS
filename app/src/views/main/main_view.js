@@ -20,12 +20,12 @@ function MainView(props) {
                             preventive measures for mitigating the risk of a
                             cardiac arrest or stroke.
                         </p>
-                        <a class="btn btn-primary" href="#" role="button">
+                        <a className="btn btn-primary" href="#" role="button">
                             Personal
                         </a>
                         <br />
                         <br />
-                        <a class="btn btn-primary" href="#" role="button">
+                        <a className="btn btn-primary" href="#" role="button">
                             Organisation
                         </a>
                     </div>

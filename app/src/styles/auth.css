@@ -33,7 +33,7 @@
 
 .signup-layout{
     position: absolute;
-    top: 100%;
+    top: 210%;
     left: 50%;
     margin-right: -50%;
     transform: translate(-50%, -50%);
@@ -41,16 +41,22 @@
 }
 
 .signup-inner{
-    top: 60%;
+    top: 115%;
+    width: 600px;
 }
 
 .auth-wrapper .form-group {
     margin-bottom: 1rem;
 }
 
-.auth-wrapper .form-group label {
+.auth-wrapper .form-group label{
     margin-bottom: 0.5rem;
     font-weight: 500;
+    text-align: justify;
+}
+
+.auth-wrapper .form-check label{
+    font-weight: unset;
 }
 
 .auth-wrapper .form-control:focus {
