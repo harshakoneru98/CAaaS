@@ -3,14 +3,10 @@
  * We should leverage the components created at src/Views here for better abstraction
  */
 
- import LoginView from '../../src/views/login/login_view';
+import LoginView from '../../src/views/login/login_view';
 
+function Login() {
+    return <LoginView />;
+}
 
- function Login() {
-     return (
-         <LoginView />
-     )
- }
- 
- export default Login;
- 
+export default Login;

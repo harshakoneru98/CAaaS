@@ -5,11 +5,8 @@
 
 import HomeView from '../../src/views/home/home_view';
 
-
 function Home() {
-    return (
-        <HomeView demo="demo prop" />
-    )
+    return <HomeView demo="demo prop" />;
 }
 
 export default Home;
