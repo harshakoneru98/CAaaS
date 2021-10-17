@@ -1,7 +1,7 @@
 import SignUpComponent from '../../components/signup.component';
 import Header from '../../components/header.component';
 
-function SignUpView(props) {
+function SignUpView() {
     return (
         <div className="App">
             <Header />

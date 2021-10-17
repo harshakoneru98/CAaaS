@@ -1,5 +1,4 @@
 .main_img{
-    /* object-fit: cover; */
     margin: 0%;
     height: 100vh;
     background: url('../../public/assets/main-page.png');
@@ -47,7 +46,7 @@
     height: 6em;
     margin-bottom: 20px;
 }
-.main_content .content p{
+.main_content .content div{
     margin-bottom: 30px;
 }
 

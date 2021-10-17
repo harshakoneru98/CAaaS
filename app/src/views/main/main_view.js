@@ -1,13 +1,22 @@
+import React, { useState } from 'react';
 import logo from '../../../public/assets/logo.jpg';
 
-function MainView(props) {
+function MainView() {
+    const [isLevel, setIsLevel] = useState('');
+
+    let authentication = (level) => {
+        setIsLevel(level);
+    };
+
+    console.log(isLevel);
+
     return (
         <div className="container main-container">
             <div className="row">
                 <div className="col-md-5 main_content">
                     <div className="content">
-                        <img src={logo.src} />
-                        <p>
+                        <img src={logo.src} alt="CAaaS" />
+                        <div>
                             A public interest initiative powered by AI with key
                             objectives of
                             <ul>
@@ -19,13 +28,27 @@ function MainView(props) {
                             clinical risk score related to heart stroke and take
                             preventive measures for mitigating the risk of a
                             cardiac arrest or stroke.
-                        </p>
-                        <a className="btn btn-primary" href="#" role="button">
+                        </div>
+                        <a
+                            className="btn btn-primary"
+                            onClick={(e) => {
+                                authentication('personal');
+                                e.preventDefault();
+                            }}
+                            role="button"
+                        >
                             Personal
                         </a>
                         <br />
                         <br />
-                        <a className="btn btn-primary" href="#" role="button">
+                        <a
+                            className="btn btn-primary"
+                            onClick={(e) => {
+                                authentication('organisation');
+                                e.preventDefault();
+                            }}
+                            role="button"
+                        >
                             Organisation
                         </a>
                     </div>

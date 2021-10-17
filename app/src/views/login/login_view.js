@@ -1,7 +1,7 @@
 import LoginComponent from '../../components/login.component';
 import Header from '../../components/header.component';
 
-function LoginView(props) {
+function LoginView() {
     return (
         <div className="App">
             <Header />
