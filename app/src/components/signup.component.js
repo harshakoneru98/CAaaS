@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import DatePicker from 'react-datepicker';
 
 export default function SignUp() {
     const [startDate, setStartDate] = useState(new Date());
@@ -28,10 +27,6 @@ export default function SignUp() {
 
             <div className="form-group">
                 <label>Date Of Birth</label>
-                {/* <DatePicker
-                    selected={startDate}
-                    onChange={(date) => setStartDate(date)}
-                /> */}
                 <input
                     type="date"
                     id="dob"
