@@ -55,6 +55,10 @@
     text-align: justify;
 }
 
+.auth-wrapper .form-error .error{
+    margin-bottom: 0px;
+}
+
 .auth-wrapper .form-check label{
     font-weight: unset;
 }
@@ -91,4 +95,17 @@
 
 .forgot-password a {
     color: #137dc5;
+}
+
+.error{
+    color: red;
+    font-size: 0.8em;
+}
+
+.form-error input, .form-error .form-control:focus{
+    border: 1px red solid;
+}
+
+.form span{
+    color: red;
 }

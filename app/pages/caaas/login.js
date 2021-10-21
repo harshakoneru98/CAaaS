@@ -4,9 +4,15 @@
  */
 
 import LoginView from '../../src/views/login/login_view';
+import Header from '../../src/components/header.component';
 
 function Login() {
-    return <LoginView />;
+    return (
+        <div className="App">
+            <Header />
+            <LoginView />
+        </div>
+    );
 }
 
 export default Login;

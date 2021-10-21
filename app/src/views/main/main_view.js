@@ -6,6 +6,7 @@ function MainView() {
 
     let authentication = (level) => {
         setIsLevel(level);
+        window.location.href = '/caaas/login';
     };
 
     console.log(isLevel);
