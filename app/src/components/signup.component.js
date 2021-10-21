@@ -112,6 +112,23 @@ export default function SignUp() {
         } else {
             setPasswordMatchValid(false);
         }
+
+        if (
+            nameRegrex.test(firstName) &&
+            nameRegrex.test(lastName) &&
+            dob != '' &&
+            state != '' &&
+            city != '' &&
+            numberRegrex.test(phoneNumber) &&
+            gender != '' &&
+            ethnicty1 != '' &&
+            ethnicty2 != '' &&
+            emailRegrex.test(email) &&
+            passwordRegrex.test(password) &&
+            password == confirmPassword
+        ) {
+            window.location.href = '/caaas/login';
+        }
     };
 
     return (
