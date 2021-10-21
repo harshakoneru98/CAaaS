@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useRouter } from 'next/router';
+import { setLevel } from '../../../redux/actionCreators/SetLevel';
 import logo from '../../../public/assets/logo.jpg';
 
 function MainView() {
-    const [isLevel, setIsLevel] = useState('');
+    const dispatch = useDispatch();
+    const router = useRouter();
 
-    let authentication = (level) => {
-        setIsLevel(level);
-        window.location.href = '/caaas/login';
+    const authentication = (elementLevel) => {
+        dispatch(setLevel(elementLevel));
+        router.push('/caaas/login');
     };
-
-    console.log(isLevel);
 
     return (
         <div className="container main-container">
