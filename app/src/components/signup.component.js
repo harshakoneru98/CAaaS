@@ -1,7 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
 import * as data from '../../public/assets/files/stateCities';
 
 export default function SignUp() {
+    const router = useRouter();
+
     const [startDate, setStartDate] = useState(new Date());
 
     const [firstName, setFirstName] = useState('');
@@ -10,6 +14,7 @@ export default function SignUp() {
     const [state, setState] = useState('');
     const [city, setCity] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
+    const [organisation, setOrganisation] = useState('');
     const [gender, setGender] = useState('');
     const [ethnicty1, setEthnicty1] = useState('');
     const [ethnicty2, setEthnicty2] = useState('');
@@ -23,6 +28,7 @@ export default function SignUp() {
     const [stateValid, setStateValid] = useState(true);
     const [cityValid, setCityValid] = useState(true);
     const [phoneNumberValid, setPhoneNumberValid] = useState(true);
+    const [organisationValid, setOrganisationValid] = useState(true);
     const [genderValid, setGenderValid] = useState(true);
     const [ethnicty1Valid, setEthnicty1Valid] = useState(true);
     const [ethnicty2Valid, setEthnicty2Valid] = useState(true);
@@ -39,6 +45,41 @@ export default function SignUp() {
 
     let states = Object.keys(data.stateCities);
     let cityData = data.stateCities;
+
+    const level = useSelector((state) => state.MainViewReducer.level ?? '');
+
+    useEffect(() => {
+        setFirstName('');
+        setLastName('');
+        setDob('');
+        setState('');
+        setCity('');
+        setPhoneNumber('');
+        setOrganisation('');
+        setGender('');
+        setEthnicty1('');
+        setEthnicty2('');
+        setEmail('');
+        setPassword('');
+        setConfirmPassword('');
+        setFirstNameValid(true);
+        setLastNameValid(true);
+        setDobValid(true);
+        setStateValid(true);
+        setCityValid(true);
+        setPhoneNumberValid(true);
+        setOrganisationValid(true);
+        setGenderValid(true);
+        setEthnicty1Valid(true);
+        setEthnicty2Valid(true);
+        setEmailValid(true);
+        setPasswordValid(true);
+        setPasswordMatchValid(true);
+    }, [level]);
+
+    let changeRoute = (elementRoute) => {
+        router.push(elementRoute);
+    };
 
     let register = () => {
         if (nameRegrex.test(firstName)) {
@@ -77,6 +118,12 @@ export default function SignUp() {
             setPhoneNumberValid(false);
         }
 
+        if (organisation != '') {
+            setOrganisationValid(true);
+        } else {
+            setOrganisationValid(false);
+        }
+
         if (gender != '') {
             setGenderValid(true);
         } else {
@@ -113,26 +160,46 @@ export default function SignUp() {
             setPasswordMatchValid(false);
         }
 
-        if (
-            nameRegrex.test(firstName) &&
-            nameRegrex.test(lastName) &&
-            dob != '' &&
-            state != '' &&
-            city != '' &&
-            numberRegrex.test(phoneNumber) &&
-            gender != '' &&
-            ethnicty1 != '' &&
-            ethnicty2 != '' &&
-            emailRegrex.test(email) &&
-            passwordRegrex.test(password) &&
-            password == confirmPassword
-        ) {
-            window.location.href = '/caaas/login';
+        if (level == 'organisation') {
+            if (
+                nameRegrex.test(firstName) &&
+                nameRegrex.test(lastName) &&
+                dob != '' &&
+                state != '' &&
+                city != '' &&
+                numberRegrex.test(phoneNumber) &&
+                organisation != '' &&
+                gender != '' &&
+                ethnicty1 != '' &&
+                ethnicty2 != '' &&
+                emailRegrex.test(email) &&
+                passwordRegrex.test(password) &&
+                password == confirmPassword
+            ) {
+                changeRoute('/caaas/login');
+            }
+        } else {
+            if (
+                nameRegrex.test(firstName) &&
+                nameRegrex.test(lastName) &&
+                dob != '' &&
+                state != '' &&
+                city != '' &&
+                numberRegrex.test(phoneNumber) &&
+                gender != '' &&
+                ethnicty1 != '' &&
+                ethnicty2 != '' &&
+                emailRegrex.test(email) &&
+                passwordRegrex.test(password) &&
+                password == confirmPassword
+            ) {
+                changeRoute('/caaas/login');
+            }
         }
     };
 
     return (
-        <form className="form">
+        <form className="form" id="form-id">
             <h3>Sign Up</h3>
 
             <div
@@ -274,6 +341,30 @@ export default function SignUp() {
                     </label>
                 )}
             </div>
+
+            {level == 'organisation' && (
+                <div
+                    className={
+                        !organisationValid
+                            ? 'form-group form-error'
+                            : 'form-group'
+                    }
+                >
+                    <label>Organisation</label>
+                    <span> *</span>
+                    <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Organisation name"
+                        onChange={(e) => {
+                            setOrganisation(e.target.value);
+                        }}
+                    />
+                    {!organisationValid && (
+                        <label className="error">Enter Organisation Name</label>
+                    )}
+                </div>
+            )}
 
             <div
                 className={
@@ -569,7 +660,15 @@ export default function SignUp() {
                 Sign Up
             </a>
             <p className="forgot-password text-right">
-                Already registered <a href="/caaas/login">sign in?</a>
+                Already registered{' '}
+                <a
+                    onClick={(e) => {
+                        changeRoute('/caaas/login');
+                        e.preventDefault();
+                    }}
+                >
+                    sign in?
+                </a>
             </p>
         </form>
     );

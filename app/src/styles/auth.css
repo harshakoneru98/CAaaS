@@ -87,7 +87,8 @@
 }
 
 .forgot-password a {
-    color: #137dc5;
+    color: #137dc5 !important;
+    text-decoration: underline !important;
 }
 
 .error{
