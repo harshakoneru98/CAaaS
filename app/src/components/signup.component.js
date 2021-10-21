@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import * as data from '../../public/assets/files/stateCities';
 
 export default function SignUp() {
     const [startDate, setStartDate] = useState(new Date());
@@ -19,6 +20,8 @@ export default function SignUp() {
     const [firstNameValid, setFirstNameValid] = useState(true);
     const [lastNameValid, setLastNameValid] = useState(true);
     const [dobValid, setDobValid] = useState(true);
+    const [stateValid, setStateValid] = useState(true);
+    const [cityValid, setCityValid] = useState(true);
     const [phoneNumberValid, setPhoneNumberValid] = useState(true);
     const [genderValid, setGenderValid] = useState(true);
     const [ethnicty1Valid, setEthnicty1Valid] = useState(true);
@@ -34,10 +37,10 @@ export default function SignUp() {
     const passwordRegrex =
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
-    let register = () => {
-        // console.log('State: ', state);
-        // console.log('City: ', city);
+    let states = Object.keys(data.stateCities);
+    let cityData = data.stateCities;
 
+    let register = () => {
         if (nameRegrex.test(firstName)) {
             setFirstNameValid(true);
         } else {
@@ -54,6 +57,18 @@ export default function SignUp() {
             setDobValid(true);
         } else {
             setDobValid(false);
+        }
+
+        if (state != '') {
+            setStateValid(true);
+        } else {
+            setStateValid(false);
+        }
+
+        if (city != '') {
+            setCityValid(true);
+        } else {
+            setCityValid(false);
         }
 
         if (numberRegrex.test(phoneNumber)) {
@@ -167,28 +182,55 @@ export default function SignUp() {
                 )}
             </div>
 
-            <div className="form-group">
+            <div
+                className={!stateValid ? 'form-group form-error' : 'form-group'}
+            >
                 <label>State</label>
-                <input
-                    type="text"
+                <span> *</span>
+                <select
                     className="form-control"
-                    placeholder="Enter State"
                     onChange={(e) => {
                         setState(e.target.value);
                     }}
-                />
+                >
+                    <option value="">Select State</option>
+                    {states.map((data, index) => {
+                        return (
+                            <option key={index} value={data}>
+                                {data}
+                            </option>
+                        );
+                    })}
+                </select>
+                {!stateValid && (
+                    <label className="error">Select atleast one state</label>
+                )}
             </div>
 
-            <div className="form-group">
+            <div
+                className={!cityValid ? 'form-group form-error' : 'form-group'}
+            >
                 <label>City</label>
-                <input
-                    type="text"
+                <span> *</span>
+                <select
                     className="form-control"
-                    placeholder="Enter City"
                     onChange={(e) => {
                         setCity(e.target.value);
                     }}
-                />
+                >
+                    {!state && <option value="">Select Above State</option>}
+                    {state && <option value="">Select City</option>}
+                    {cityData[state]?.map((data, index) => {
+                        return (
+                            <option key={index} value={data}>
+                                {data}
+                            </option>
+                        );
+                    })}
+                </select>
+                {!cityValid && (
+                    <label className="error">Select atleast one city</label>
+                )}
             </div>
 
             <div

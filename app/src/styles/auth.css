@@ -102,7 +102,7 @@
     font-size: 0.8em;
 }
 
-.form-error input, .form-error .form-control:focus{
+.form-error input, .form-error .form-control:focus, .form-error .form-control{
     border: 1px red solid;
 }
 
