@@ -49,7 +49,6 @@ export default function SignUp() {
     const level = useSelector((state) => state.MainViewReducer.level ?? '');
 
     useEffect(() => {
-        console.log(level);
         setFirstName('');
         setLastName('');
         setDob('');

@@ -11,6 +11,12 @@ export default function Login() {
 
     const level = useSelector((state) => state.MainViewReducer.level ?? '');
 
+    useEffect(() => {
+        setEmail('');
+        setPassword('');
+        setValid(true);
+    }, [level]);
+
     let changeRoute = (elementRoute) => {
         router.push(elementRoute);
     };
