@@ -23,21 +23,28 @@ export default function SignUp() {
     const [genderValid, setGenderValid] = useState(true);
     const [ethnicty1Valid, setEthnicty1Valid] = useState(true);
     const [ethnicty2Valid, setEthnicty2Valid] = useState(true);
+    const [emailValid, setEmailValid] = useState(true);
+    const [passwordValid, setPasswordValid] = useState(true);
+    const [passwordMatchValid, setPasswordMatchValid] = useState(true);
+
+    const nameRegrex = /[A-Za-z]/;
+    const numberRegrex = /^\d{10}$/;
+    const emailRegrex =
+        /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const passwordRegrex =
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
     let register = () => {
         // console.log('State: ', state);
         // console.log('City: ', city);
-        // console.log('Email: ', email);
-        // console.log('Password: ', password);
-        // console.log('Confirm Password: ', confirmPassword);
 
-        if (/[A-Za-z]/.test(firstName)) {
+        if (nameRegrex.test(firstName)) {
             setFirstNameValid(true);
         } else {
             setFirstNameValid(false);
         }
 
-        if (/[A-Za-z]/.test(lastName)) {
+        if (nameRegrex.test(lastName)) {
             setLastNameValid(true);
         } else {
             setLastNameValid(false);
@@ -49,7 +56,7 @@ export default function SignUp() {
             setDobValid(false);
         }
 
-        if (/^\d{10}$/.test(phoneNumber)) {
+        if (numberRegrex.test(phoneNumber)) {
             setPhoneNumberValid(true);
         } else {
             setPhoneNumberValid(false);
@@ -71,6 +78,24 @@ export default function SignUp() {
             setEthnicty2Valid(true);
         } else {
             setEthnicty2Valid(false);
+        }
+
+        if (emailRegrex.test(email)) {
+            setEmailValid(true);
+        } else {
+            setEmailValid(false);
+        }
+
+        if (passwordRegrex.test(password)) {
+            setPasswordValid(true);
+        } else {
+            setPasswordValid(false);
+        }
+
+        if (password == confirmPassword) {
+            setPasswordMatchValid(true);
+        } else {
+            setPasswordMatchValid(false);
         }
     };
 
@@ -137,7 +162,7 @@ export default function SignUp() {
                 />
                 {!dobValid && (
                     <label className="error">
-                        Fill the date in mm/dd/yyyy format
+                        Enter the date in mm/dd/yyyy format
                     </label>
                 )}
             </div>
@@ -411,8 +436,11 @@ export default function SignUp() {
                 )}
             </div>
 
-            <div className="form-group">
+            <div
+                className={!emailValid ? 'form-group form-error' : 'form-group'}
+            >
                 <label>Email address</label>
+                <span> *</span>
                 <input
                     type="email"
                     className="form-control"
@@ -421,10 +449,20 @@ export default function SignUp() {
                         setEmail(e.target.value);
                     }}
                 />
+                {!emailValid && (
+                    <label className="error">Enter valid email address</label>
+                )}
             </div>
 
-            <div className="form-group">
+            <div
+                className={
+                    !passwordMatchValid || !passwordValid
+                        ? 'form-group form-error'
+                        : 'form-group'
+                }
+            >
                 <label>Password</label>
+                <span> *</span>
                 <input
                     type="password"
                     className="form-control"
@@ -433,10 +471,21 @@ export default function SignUp() {
                         setPassword(e.target.value);
                     }}
                 />
+                {!passwordValid && (
+                    <label className="error">
+                        Enter 8 minimum characters. Atleast 1 UpperCase, 1
+                        LowerCase, 1 Number and 1 Special Character
+                    </label>
+                )}
             </div>
 
-            <div className="form-group">
+            <div
+                className={
+                    !passwordMatchValid ? 'form-group form-error' : 'form-group'
+                }
+            >
                 <label>Confirm Password</label>
+                <span> *</span>
                 <input
                     type="password"
                     className="form-control"
@@ -445,6 +494,9 @@ export default function SignUp() {
                         setConfirmPassword(e.target.value);
                     }}
                 />
+                {!passwordMatchValid && (
+                    <label className="error">Passwords doesn't match</label>
+                )}
             </div>
 
             <a
