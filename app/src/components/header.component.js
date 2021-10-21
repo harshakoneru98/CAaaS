@@ -32,7 +32,13 @@ export default function Header() {
     return (
         <nav className="navbar navbar-expand-lg navbar-light fixed-top bg-white">
             <div className="container">
-                <a className="navbar-brand" href="/">
+                <a
+                    className="navbar-brand"
+                    onClick={(e) => {
+                        changeRoute('/');
+                        e.preventDefault();
+                    }}
+                >
                     <img src={main.src} alt="Main" />
                 </a>
                 <div

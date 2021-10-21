@@ -1,17 +1,26 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
 
 export default function Login() {
+    const router = useRouter();
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
     const [valid, setValid] = useState(true);
+
+    const level = useSelector((state) => state.MainViewReducer.level ?? '');
+
+    let changeRoute = (elementRoute) => {
+        router.push(elementRoute);
+    };
 
     let login = () => {
         if (email == '' || password == '') {
             setValid(false);
         } else {
             setValid(true);
-            window.location.href = '/caaas/home';
+            changeRoute('/caaas/home');
         }
     };
 
@@ -25,7 +34,11 @@ export default function Login() {
                 <input
                     type="email"
                     className="form-control"
-                    placeholder="Enter email"
+                    placeholder={
+                        level == 'organisation'
+                            ? 'Enter organisation email'
+                            : 'Enter email'
+                    }
                     onChange={(e) => {
                         setEmail(e.target.value);
                     }}
@@ -58,7 +71,15 @@ export default function Login() {
                 Log In
             </a>
             <p className="forgot-password text-right">
-                Not registered <a href="/caaas/register">sign up?</a>
+                Not registered{' '}
+                <a
+                    onClick={(e) => {
+                        changeRoute('/caaas/register');
+                        e.preventDefault();
+                    }}
+                >
+                    sign up?
+                </a>
             </p>
         </form>
     );
