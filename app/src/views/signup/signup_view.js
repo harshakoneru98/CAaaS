@@ -6,7 +6,6 @@ function SignUpView() {
             <div className="auth-inner signup-inner">
                 <SignUpComponent />
             </div>
-            <div className="signup-layout"></div>
         </div>
     );
 }
