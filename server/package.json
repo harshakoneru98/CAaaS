@@ -1,7 +1,7 @@
 {
-  "name": "server-mednax",
+  "name": "server-caaas",
   "version": "1.0.0",
-  "description": "Server Mednax",
+  "description": "Server CAaaS",
   "main": "index.js",
   "scripts": {
     "start": "tsc && node lib/src/server.js"
