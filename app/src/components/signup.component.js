@@ -16,8 +16,7 @@ export default function SignUp() {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [organisation, setOrganisation] = useState('');
     const [gender, setGender] = useState('');
-    const [ethnicty1, setEthnicty1] = useState('');
-    const [ethnicty2, setEthnicty2] = useState('');
+    const [ethnicty, setEthnicty] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -30,8 +29,7 @@ export default function SignUp() {
     const [phoneNumberValid, setPhoneNumberValid] = useState(true);
     const [organisationValid, setOrganisationValid] = useState(true);
     const [genderValid, setGenderValid] = useState(true);
-    const [ethnicty1Valid, setEthnicty1Valid] = useState(true);
-    const [ethnicty2Valid, setEthnicty2Valid] = useState(true);
+    const [ethnictyValid, setEthnictyValid] = useState(true);
     const [emailValid, setEmailValid] = useState(true);
     const [passwordValid, setPasswordValid] = useState(true);
     const [passwordMatchValid, setPasswordMatchValid] = useState(true);
@@ -57,8 +55,7 @@ export default function SignUp() {
         setPhoneNumber('');
         setOrganisation('');
         setGender('');
-        setEthnicty1('');
-        setEthnicty2('');
+        setEthnicty('');
         setEmail('');
         setPassword('');
         setConfirmPassword('');
@@ -70,8 +67,7 @@ export default function SignUp() {
         setPhoneNumberValid(true);
         setOrganisationValid(true);
         setGenderValid(true);
-        setEthnicty1Valid(true);
-        setEthnicty2Valid(true);
+        setEthnictyValid(true);
         setEmailValid(true);
         setPasswordValid(true);
         setPasswordMatchValid(true);
@@ -130,16 +126,10 @@ export default function SignUp() {
             setGenderValid(false);
         }
 
-        if (ethnicty1 != '') {
-            setEthnicty1Valid(true);
+        if (ethnicty != '') {
+            setEthnictyValid(true);
         } else {
-            setEthnicty1Valid(false);
-        }
-
-        if (ethnicty2 != '') {
-            setEthnicty2Valid(true);
-        } else {
-            setEthnicty2Valid(false);
+            setEthnictyValid(false);
         }
 
         if (emailRegrex.test(email)) {
@@ -170,8 +160,7 @@ export default function SignUp() {
                 numberRegrex.test(phoneNumber) &&
                 organisation != '' &&
                 gender != '' &&
-                ethnicty1 != '' &&
-                ethnicty2 != '' &&
+                ethnicty != '' &&
                 emailRegrex.test(email) &&
                 passwordRegrex.test(password) &&
                 password == confirmPassword
@@ -187,8 +176,7 @@ export default function SignUp() {
                 city != '' &&
                 numberRegrex.test(phoneNumber) &&
                 gender != '' &&
-                ethnicty1 != '' &&
-                ethnicty2 != '' &&
+                ethnicty != '' &&
                 emailRegrex.test(email) &&
                 passwordRegrex.test(password) &&
                 password == confirmPassword
@@ -445,53 +433,7 @@ export default function SignUp() {
 
             <div
                 className={
-                    !ethnicty1Valid ? 'form-group form-error' : 'form-group'
-                }
-            >
-                <label>Are you Hispanic or Latino?</label>
-                <span> *</span>
-                <div className="form-check">
-                    <input
-                        className="form-check-input"
-                        type="radio"
-                        name="ethnicty1"
-                        id="Yes"
-                        onChange={(e) => {
-                            setEthnicty1(e.target.id);
-                        }}
-                    />
-                    <label className="form-check-label" htmlFor="Yes">
-                        Yes
-                    </label>
-                </div>
-                <div
-                    className={
-                        !ethnicty1Valid ? 'form-check' : 'form-group form-check'
-                    }
-                >
-                    <input
-                        className="form-check-input"
-                        type="radio"
-                        name="ethnicty1"
-                        id="No"
-                        onChange={(e) => {
-                            setEthnicty1(e.target.id);
-                        }}
-                    />
-                    <label className="form-check-label" htmlFor="No">
-                        No
-                    </label>
-                </div>
-                {!ethnicty1Valid && (
-                    <label className="error">
-                        Select atleast one of the above options
-                    </label>
-                )}
-            </div>
-
-            <div
-                className={
-                    !ethnicty2Valid ? 'form-group form-error' : 'form-group'
+                    !ethnictyValid ? 'form-group form-error' : 'form-group'
                 }
             >
                 <label>How you identify yourself?</label>
@@ -500,10 +442,24 @@ export default function SignUp() {
                     <input
                         className="form-check-input"
                         type="radio"
-                        name="ethnicty2"
+                        name="ethnicty"
+                        id="hol"
+                        onChange={(e) => {
+                            setEthnicty(e.target.id);
+                        }}
+                    />
+                    <label className="form-check-label" htmlFor="hol">
+                        Hispanic or Latino
+                    </label>
+                </div>
+                <div className="form-check">
+                    <input
+                        className="form-check-input"
+                        type="radio"
+                        name="ethnicty"
                         id="White"
                         onChange={(e) => {
-                            setEthnicty2(e.target.id);
+                            setEthnicty(e.target.id);
                         }}
                     />
                     <label className="form-check-label" htmlFor="White">
@@ -514,10 +470,10 @@ export default function SignUp() {
                     <input
                         className="form-check-input"
                         type="radio"
-                        name="ethnicty2"
+                        name="ethnicty"
                         id="Black or African American"
                         onChange={(e) => {
-                            setEthnicty2(e.target.id);
+                            setEthnicty(e.target.id);
                         }}
                     />
                     <label
@@ -531,10 +487,10 @@ export default function SignUp() {
                     <input
                         className="form-check-input"
                         type="radio"
-                        name="ethnicty2"
+                        name="ethnicty"
                         id="American Indian or Alaska Native"
                         onChange={(e) => {
-                            setEthnicty2(e.target.id);
+                            setEthnicty(e.target.id);
                         }}
                     />
                     <label
@@ -548,10 +504,10 @@ export default function SignUp() {
                     <input
                         className="form-check-input"
                         type="radio"
-                        name="ethnicty2"
+                        name="ethnicty"
                         id="Asian"
                         onChange={(e) => {
-                            setEthnicty2(e.target.id);
+                            setEthnicty(e.target.id);
                         }}
                     />
                     <label className="form-check-label" htmlFor="Asian">
@@ -560,16 +516,16 @@ export default function SignUp() {
                 </div>
                 <div
                     className={
-                        !ethnicty2Valid ? 'form-check' : 'form-group form-check'
+                        !ethnictyValid ? 'form-check' : 'form-group form-check'
                     }
                 >
                     <input
                         className="form-check-input"
                         type="radio"
-                        name="ethnicty2"
+                        name="ethnicty"
                         id="Native Hawaiian or Other Pacific Islander"
                         onChange={(e) => {
-                            setEthnicty2(e.target.id);
+                            setEthnicty(e.target.id);
                         }}
                     />
                     <label
@@ -579,7 +535,7 @@ export default function SignUp() {
                         Native Hawaiian or Other Pacific Islander
                     </label>
                 </div>
-                {!ethnicty2Valid && (
+                {!ethnictyValid && (
                     <label className="error">
                         Select atleast one of the above options
                     </label>
