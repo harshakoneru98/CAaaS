@@ -75,6 +75,12 @@ export default class UserController {
             await documentClient.put(params3, function (err, data) {
                 if (err) console.log(err);
             });
+
+            await res.send({
+                status: 200,
+                data: 'Created User Successfully',
+                message: 'OK'
+            });
         } catch (err) {
             res.status(500).json({
                 message: err
@@ -102,9 +108,16 @@ export default class UserController {
             documentClient.query(params, function (err, data) {
                 if (err) console.log(err);
                 else {
+                    let userId = ''
+                    if(data['Count'] == 0){
+                        userId = ''
+                    }
+                    else{
+                        userId = data['Items'][0]['PK']
+                    }
                     res.send({
                         status: 200,
-                        data: data['Items'][0]['PK'],
+                        data: userId,
                         message: 'OK'
                     });
                 }
