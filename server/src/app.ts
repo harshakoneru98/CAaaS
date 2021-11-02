@@ -17,7 +17,7 @@ import * as morgan from 'morgan'
 // Parse incoming request bodies in a middleware before your handlers, available under the req.body property.
 import * as bodyParser from 'body-parser'
 
-import usStateCityRoutes from './api/routes/usStateCityRoute'
+import userRoutes from './api/routes/userRoute'
 
 app.use(morgan('dev'))
 
@@ -40,7 +40,7 @@ app.use((req, res, next) => {
 })
 
 // Routes which should handle requests
-app.use('/api/statecity', usStateCityRoutes);
+app.use('/api/user', userRoutes);
 
 app.use((req, res, next) => {
     const error = new Error('Not found')

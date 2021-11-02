@@ -43,6 +43,7 @@ export default function SignUp() {
 
     let states = Object.keys(data.stateCities);
     let cityData = data.stateCities;
+    let params;
 
     const level = useSelector((state) => state.MainViewReducer.level ?? '');
 
@@ -75,6 +76,18 @@ export default function SignUp() {
 
     let changeRoute = (elementRoute) => {
         router.push(elementRoute);
+    };
+
+    let registerSubmit = async (params) => {
+        await fetch('/api/postUser', {
+            method: 'POST',
+            body: JSON.stringify(params),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        changeRoute('/caaas/login');
     };
 
     let register = () => {
@@ -165,7 +178,20 @@ export default function SignUp() {
                 passwordRegrex.test(password) &&
                 password == confirmPassword
             ) {
-                changeRoute('/caaas/login');
+                params = {
+                    firstName: firstName,
+                    lastName: lastName,
+                    dob: dob,
+                    state: state,
+                    city: city,
+                    phoneNumber: phoneNumber,
+                    organisation: organisation,
+                    gender: gender,
+                    ethnicty: ethnicty,
+                    email: email,
+                    password: password
+                };
+                registerSubmit(params);
             }
         } else {
             if (
@@ -181,7 +207,20 @@ export default function SignUp() {
                 passwordRegrex.test(password) &&
                 password == confirmPassword
             ) {
-                changeRoute('/caaas/login');
+                params = {
+                    firstName: firstName,
+                    lastName: lastName,
+                    dob: dob,
+                    state: state,
+                    city: city,
+                    phoneNumber: phoneNumber,
+                    organisation: 'self',
+                    gender: gender,
+                    ethnicty: ethnicty,
+                    email: email,
+                    password: password
+                };
+                registerSubmit(params);
             }
         }
     };
