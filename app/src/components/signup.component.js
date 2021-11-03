@@ -77,6 +77,10 @@ export default function SignUp() {
         setPasswordMatchValid(true);
     }, [level, emailRepeatValid]);
 
+    useEffect(() => {
+        setEmailRepeatValid(true);
+    }, [level]);
+
     let changeRoute = (elementRoute) => {
         router.push(elementRoute);
     };
@@ -96,7 +100,6 @@ export default function SignUp() {
                 ]);
             });
         let userStatus = myCache.mget(['userStatus']).userStatus;
-        console.log('Status : ', userStatus);
 
         if (userStatus == 'Email already exists') {
             setEmailRepeatValid(false);
