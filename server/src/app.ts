@@ -18,6 +18,7 @@ import * as morgan from 'morgan'
 import * as bodyParser from 'body-parser'
 
 import userRoutes from './api/routes/userRoute'
+import authRoutes from './api/routes/authRoute'
 
 app.use(morgan('dev'))
 
@@ -41,6 +42,7 @@ app.use((req, res, next) => {
 
 // Routes which should handle requests
 app.use('/api/user', userRoutes);
+app.use('/api/auth', authRoutes);
 
 app.use((req, res, next) => {
     const error = new Error('Not found')

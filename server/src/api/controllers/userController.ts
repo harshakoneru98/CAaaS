@@ -47,7 +47,6 @@ export default class UserController {
                 // Create unique userid
                 const userId = uuid();
                 const groupId = uuid();
-                const authId = uuid();
 
                 let params1 = {
                     TableName: 'user_data',
@@ -59,6 +58,7 @@ export default class UserController {
                         dob: params.dob,
                         state: params.state,
                         city: params.city,
+                        organisation: params.organisation || 'self',
                         phoneNumber: params.phoneNumber,
                         gender: params.gender,
                         ethnicity: params.ethnicity
@@ -71,7 +71,8 @@ export default class UserController {
                         PK: `AUTH#${params.email}`,
                         SK: `#METADATA#${params.email}`,
                         password: params.password,
-                        userId: userId
+                        userId: userId,
+                        organisationType: groupType
                     }
                 };
 
