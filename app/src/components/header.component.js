@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { setLevel } from '../../redux/actionCreators/SetLevel';
-import main from '../../public/assets/logo_nobg.png';
+import main from '../../public/assets/images/logo_nobg.png';
 
 export default function Header() {
     const dispatch = useDispatch();

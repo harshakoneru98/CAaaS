@@ -42,7 +42,6 @@ export default function Login() {
             });
 
         let checkStatus = myCache.mget(['checkStatus']).checkStatus;
-        console.log('Status : ', checkStatus);
 
         if (checkStatus == 'Valid') {
             setValid(true);
