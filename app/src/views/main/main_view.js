@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 import { setLevel } from '../../../redux/actionCreators/SetLevel';
-import logo from '../../../public/assets/logo.jpg';
+import logo from '../../../public/assets/images/logo.jpg';
 
 function MainView() {
     const dispatch = useDispatch();

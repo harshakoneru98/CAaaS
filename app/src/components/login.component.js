@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
+import * as cacheStore from 'node-cache';
 
 export default function Login() {
     const router = useRouter();
+    let myCache = new cacheStore();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -14,6 +16,9 @@ export default function Login() {
     useEffect(() => {
         setEmail('');
         setPassword('');
+    }, [level, valid]);
+
+    useEffect(() => {
         setValid(true);
     }, [level]);
 
@@ -21,12 +26,41 @@ export default function Login() {
         router.push(elementRoute);
     };
 
+    let checkLogin = async (params) => {
+        await fetch('/api/checkLogin', {
+            method: 'POST',
+            body: JSON.stringify(params),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                myCache.mset([
+                    { key: 'checkStatus', val: data.data, ttl: 10000 }
+                ]);
+            });
+
+        let checkStatus = myCache.mget(['checkStatus']).checkStatus;
+
+        if (checkStatus == 'Valid') {
+            setValid(true);
+            changeRoute('/caaas/home');
+        } else {
+            setValid(false);
+        }
+    };
+
     let login = () => {
         if (email == '' || password == '') {
             setValid(false);
         } else {
-            setValid(true);
-            changeRoute('/caaas/home');
+            let params = {
+                email: email,
+                password: password,
+                organisationType: level == 'organisation' ? 'org' : 'self'
+            };
+            checkLogin(params);
         }
     };
 
@@ -48,6 +82,7 @@ export default function Login() {
                     onChange={(e) => {
                         setEmail(e.target.value);
                     }}
+                    value={email}
                 />
             </div>
 
@@ -61,6 +96,7 @@ export default function Login() {
                     onChange={(e) => {
                         setPassword(e.target.value);
                     }}
+                    value={password}
                 />
                 {!valid && (
                     <label className="error">Enter valid credentials</label>
