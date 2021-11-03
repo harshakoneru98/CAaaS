@@ -1,11 +1,7 @@
 export default async (req, res) => {
-    fetch('http://localhost:8080/api/user/create/', {
-        method: 'POST',
-        headers: {
-            'Content-type': 'application/json'
-        },
-        body: JSON.stringify(req.body)
-    })
+    let email = req.url.split('?email=')[1];
+
+    await fetch('http://localhost:8080/api/user/userId/' + email)
         .then((res) => res.json())
         .then((data) => {
             res.send({

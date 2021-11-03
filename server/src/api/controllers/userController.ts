@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import { v4 as uuid } from 'uuid';
 import * as AWS from 'aws-sdk';
+import fetch from 'node-fetch';
+import * as store from 'node-cache';
 import config from '../../config/config';
 
 AWS.config.update({
@@ -15,6 +17,7 @@ export default class UserController {
     // Create user
     public create_user = async (req: Request, res: Response) => {
         let params = req.body;
+        let myCache = new store();
 
         let groupType = '';
         if (params.organisation == 'self') {
@@ -24,63 +27,81 @@ export default class UserController {
         }
 
         try {
-            // Create unique userid
-            const userId = uuid();
-            const groupId = uuid();
-            const authId = uuid();
+            await fetch('http://localhost:8080/api/user/userId/' + params.email)
+                .then((res) => res.json())
+                .then((data) => {
+                    myCache.mset([
+                        { key: 'userId', val: data.data, ttl: 10000 }
+                    ]);
+                });
 
-            let params1 = {
-                TableName: 'user_data',
-                Item: {
-                    PK: `USR#${userId}`,
-                    SK: `#METADATA#${userId}`,
-                    firstName: params.firstName,
-                    lastName: params.lastName,
-                    dob: params.dob,
-                    state: params.state,
-                    city: params.city,
-                    phoneNumber: params.phoneNumber,
-                    gender: params.gender,
-                    ethnicity: params.ethnicity
-                }
-            };
+            let userExistsId = myCache.mget(['userId']).userId;
 
-            let params2 = {
-                TableName: 'user_data',
-                Item: {
-                    PK: `USR#${userId}`,
-                    SK: `AUTH#${authId}`,
-                    email: params.email,
-                    password: params.password
-                }
-            };
+            if (userExistsId != '') {
+                await res.send({
+                    status: 200,
+                    data: 'Email already exists',
+                    message: 'OK'
+                });
+            } else {
+                // Create unique userid
+                const userId = uuid();
+                const groupId = uuid();
+                const authId = uuid();
 
-            let params3 = {
-                TableName: 'user_data',
-                Item: {
-                    PK: `USR#${userId}`,
-                    SK: `GRP#${groupType}#${groupId}`,
-                    name: params.organisation
-                }
-            };
+                let params1 = {
+                    TableName: 'user_data',
+                    Item: {
+                        PK: `USR#${userId}`,
+                        SK: `#METADATA#${userId}`,
+                        firstName: params.firstName,
+                        lastName: params.lastName,
+                        dob: params.dob,
+                        state: params.state,
+                        city: params.city,
+                        phoneNumber: params.phoneNumber,
+                        gender: params.gender,
+                        ethnicity: params.ethnicity
+                    }
+                };
 
-            await documentClient.put(params1, function (err, data) {
-                if (err) console.log(err);
-            });
+                let params2 = {
+                    TableName: 'user_data',
+                    Item: {
+                        PK: `AUTH#${params.email}`,
+                        SK: `#METADATA#${params.email}`,
+                        password: params.password,
+                        userId: userId
+                    }
+                };
 
-            await documentClient.put(params2, function (err, data) {
-                if (err) console.log(err);
-            });
+                let params3 = {
+                    TableName: 'user_data',
+                    Item: {
+                        PK: `USR#${userId}`,
+                        SK: `GRP#${groupType}#${groupId}`,
+                        name: params.organisation
+                    }
+                };
 
-            await documentClient.put(params3, function (err, data) {
-                if (err) console.log(err);
-            });
+                await documentClient.put(params1, function (err, data) {
+                    if (err) console.log(err);
+                });
 
-            await res.send({
-                status: 200,
-                data: 'Created User Successfully',
-                message: 'OK'
-            });
+                await documentClient.put(params2, function (err, data) {
+                    if (err) console.log(err);
+                });
+
+                await documentClient.put(params3, function (err, data) {
+                    if (err) console.log(err);
+                });
+
+                await res.send({
+                    status: 200,
+                    data: 'Created User Successfully',
+                    message: 'OK'
+                });
+            }
         } catch (err) {
             res.status(500).json({
                 message: err
@@ -95,25 +116,20 @@ export default class UserController {
         try {
             var params = {
                 TableName: 'user_data',
-                IndexName: 'Filter-By-Email',
-                KeyConditionExpression: '#PK = :PK',
-                ExpressionAttributeNames: { '#PK': 'email' },
-                ExpressionAttributeValues: {
-                    ':PK': email
+                Key: {
+                    PK: 'AUTH#' + email,
+                    SK: '#METADATA#' + email
                 }
             };
 
             var documentClient = new AWS.DynamoDB.DocumentClient();
 
-            documentClient.query(params, function (err, data) {
+            documentClient.get(params, function (err, data) {
                 if (err) console.log(err);
                 else {
-                    let userId = ''
-                    if(data['Count'] == 0){
-                        userId = ''
-                    }
-                    else{
-                        userId = data['Items'][0]['PK']
+                    let userId = '';
+                    if (data.Item) {
+                        userId = data.Item.userId;
                     }
                     res.send({
                         status: 200,
@@ -128,4 +144,44 @@ export default class UserController {
             });
         }
     };
+
+    // public get_user_by_email = async (req: Request, res: Response) => {
+    //     let email = req.params.email;
+
+    //     try {
+    //         var params = {
+    //             TableName: 'user_data',
+    //             IndexName: 'Filter-By-Email',
+    //             KeyConditionExpression: '#PK = :PK',
+    //             ExpressionAttributeNames: { '#PK': 'email' },
+    //             ExpressionAttributeValues: {
+    //                 ':PK': email
+    //             }
+    //         };
+
+    //         var documentClient = new AWS.DynamoDB.DocumentClient();
+
+    //         documentClient.query(params, function (err, data) {
+    //             if (err) console.log(err);
+    //             else {
+    //                 let userId = ''
+    //                 if(data['Count'] == 0){
+    //                     userId = ''
+    //                 }
+    //                 else{
+    //                     userId = data['Items'][0]['PK']
+    //                 }
+    //                 res.send({
+    //                     status: 200,
+    //                     data: userId,
+    //                     message: 'OK'
+    //                 });
+    //             }
+    //         });
+    //     } catch (err) {
+    //         res.status(500).json({
+    //             message: err
+    //         });
+    //     }
+    // };
 }
