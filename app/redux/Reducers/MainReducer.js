@@ -1,4 +1,5 @@
 import React from 'react';
+import { types } from '../actionCreators/Types';
 
 const initialState = {
     level: ''
@@ -17,7 +18,7 @@ const initialState = {
  */
 const MainReducer = (state = initialState, action) => {
     switch (action.type) {
-        case 'SET_LEVEL':
+        case types.SET_LEVEL:
             return {
                 ...state,
                 level: action.payload

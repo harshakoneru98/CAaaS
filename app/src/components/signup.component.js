@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
+import * as cacheStore from 'node-cache';
 import * as data from '../../public/assets/files/stateCities';
 
 export default function SignUp() {
     const router = useRouter();
+    let myCache = new cacheStore();
 
     const [startDate, setStartDate] = useState(new Date());
 
@@ -31,6 +33,7 @@ export default function SignUp() {
     const [genderValid, setGenderValid] = useState(true);
     const [ethnictyValid, setEthnictyValid] = useState(true);
     const [emailValid, setEmailValid] = useState(true);
+    const [emailRepeatValid, setEmailRepeatValid] = useState(true);
     const [passwordValid, setPasswordValid] = useState(true);
     const [passwordMatchValid, setPasswordMatchValid] = useState(true);
 
@@ -72,7 +75,7 @@ export default function SignUp() {
         setEmailValid(true);
         setPasswordValid(true);
         setPasswordMatchValid(true);
-    }, [level]);
+    }, [level, emailRepeatValid]);
 
     let changeRoute = (elementRoute) => {
         router.push(elementRoute);
@@ -85,12 +88,25 @@ export default function SignUp() {
             headers: {
                 'Content-Type': 'application/json'
             }
-        });
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                myCache.mset([
+                    { key: 'userStatus', val: data.data, ttl: 10000 }
+                ]);
+            });
+        let userStatus = myCache.mget(['userStatus']).userStatus;
+        console.log('Status : ', userStatus);
 
-        changeRoute('/caaas/login');
+        if (userStatus == 'Email already exists') {
+            setEmailRepeatValid(false);
+        } else {
+            changeRoute('/caaas/login');
+            setEmailRepeatValid(true);
+        }
     };
 
-    let register = () => {
+    let register = async () => {
         if (nameRegrex.test(firstName)) {
             setFirstNameValid(true);
         } else {
@@ -243,6 +259,7 @@ export default function SignUp() {
                     onChange={(e) => {
                         setFirstName(e.target.value);
                     }}
+                    value={firstName}
                 />
                 {!firstNameValid && (
                     <label className="error">
@@ -265,6 +282,7 @@ export default function SignUp() {
                     onChange={(e) => {
                         setLastName(e.target.value);
                     }}
+                    value={lastName}
                 />
                 {!lastNameValid && (
                     <label className="error">
@@ -285,6 +303,7 @@ export default function SignUp() {
                     onChange={(e) => {
                         setDob(e.target.value);
                     }}
+                    value={dob}
                 />
                 {!dobValid && (
                     <label className="error">
@@ -303,6 +322,7 @@ export default function SignUp() {
                     onChange={(e) => {
                         setState(e.target.value);
                     }}
+                    value={state}
                 >
                     <option value="">Select State</option>
                     {states.map((data, index) => {
@@ -361,6 +381,7 @@ export default function SignUp() {
                     onChange={(e) => {
                         setPhoneNumber(e.target.value);
                     }}
+                    value={phoneNumber}
                 />
                 {!phoneNumberValid && (
                     <label className="error">
@@ -386,6 +407,7 @@ export default function SignUp() {
                         onChange={(e) => {
                             setOrganisation(e.target.value);
                         }}
+                        value={organisation}
                     />
                     {!organisationValid && (
                         <label className="error">Enter Organisation Name</label>
@@ -407,8 +429,10 @@ export default function SignUp() {
                         name="gender"
                         id="Male"
                         onChange={(e) => {
-                            setGender(e.target.id);
+                            setGender(e.target.value);
                         }}
+                        value="Male"
+                        checked={gender == 'Male' ? true : false}
                     />
                     <label className="form-check-label" htmlFor="Male">
                         Male
@@ -421,25 +445,13 @@ export default function SignUp() {
                         name="gender"
                         id="Female"
                         onChange={(e) => {
-                            setGender(e.target.id);
+                            setGender(e.target.value);
                         }}
+                        value="Female"
+                        checked={gender == 'Female' ? true : false}
                     />
                     <label className="form-check-label" htmlFor="Female">
                         Female
-                    </label>
-                </div>
-                <div className="form-check">
-                    <input
-                        className="form-check-input"
-                        type="radio"
-                        name="gender"
-                        id="Others"
-                        onChange={(e) => {
-                            setGender(e.target.id);
-                        }}
-                    />
-                    <label className="form-check-label" htmlFor="Others">
-                        Others
                     </label>
                 </div>
                 <div
@@ -451,18 +463,18 @@ export default function SignUp() {
                         className="form-check-input"
                         type="radio"
                         name="gender"
-                        id="Prefer not to say"
+                        id="Others"
                         onChange={(e) => {
-                            setGender(e.target.id);
+                            setGender(e.target.value);
                         }}
+                        value="Others"
+                        checked={gender == 'Others' ? true : false}
                     />
-                    <label
-                        className="form-check-label"
-                        htmlFor="Prefer not to say"
-                    >
-                        Prefer not to say
+                    <label className="form-check-label" htmlFor="Others">
+                        Others
                     </label>
                 </div>
+
                 {!genderValid && (
                     <label className="error">
                         Select atleast one of the above options
@@ -482,12 +494,18 @@ export default function SignUp() {
                         className="form-check-input"
                         type="radio"
                         name="ethnicty"
-                        id="hol"
+                        id="Hispanic or Latino"
                         onChange={(e) => {
                             setEthnicty(e.target.id);
                         }}
+                        checked={
+                            ethnicty == 'Hispanic or Latino' ? true : false
+                        }
                     />
-                    <label className="form-check-label" htmlFor="hol">
+                    <label
+                        className="form-check-label"
+                        htmlFor="Hispanic or Latino"
+                    >
                         Hispanic or Latino
                     </label>
                 </div>
@@ -500,6 +518,7 @@ export default function SignUp() {
                         onChange={(e) => {
                             setEthnicty(e.target.id);
                         }}
+                        checked={ethnicty == 'White' ? true : false}
                     />
                     <label className="form-check-label" htmlFor="White">
                         White
@@ -514,6 +533,11 @@ export default function SignUp() {
                         onChange={(e) => {
                             setEthnicty(e.target.id);
                         }}
+                        checked={
+                            ethnicty == 'Black or African American'
+                                ? true
+                                : false
+                        }
                     />
                     <label
                         className="form-check-label"
@@ -531,6 +555,11 @@ export default function SignUp() {
                         onChange={(e) => {
                             setEthnicty(e.target.id);
                         }}
+                        checked={
+                            ethnicty == 'American Indian or Alaska Native'
+                                ? true
+                                : false
+                        }
                     />
                     <label
                         className="form-check-label"
@@ -548,6 +577,7 @@ export default function SignUp() {
                         onChange={(e) => {
                             setEthnicty(e.target.id);
                         }}
+                        checked={ethnicty == 'Asian' ? true : false}
                     />
                     <label className="form-check-label" htmlFor="Asian">
                         Asian
@@ -566,6 +596,12 @@ export default function SignUp() {
                         onChange={(e) => {
                             setEthnicty(e.target.id);
                         }}
+                        checked={
+                            ethnicty ==
+                            'Native Hawaiian or Other Pacific Islander'
+                                ? true
+                                : false
+                        }
                     />
                     <label
                         className="form-check-label"
@@ -582,7 +618,11 @@ export default function SignUp() {
             </div>
 
             <div
-                className={!emailValid ? 'form-group form-error' : 'form-group'}
+                className={
+                    !emailValid || !emailRepeatValid
+                        ? 'form-group form-error'
+                        : 'form-group'
+                }
             >
                 <label>Email address</label>
                 <span> *</span>
@@ -596,6 +636,11 @@ export default function SignUp() {
                 />
                 {!emailValid && (
                     <label className="error">Enter valid email address</label>
+                )}
+                {!emailRepeatValid && (
+                    <label className="error">
+                        Email address already exists
+                    </label>
                 )}
             </div>
 
@@ -615,6 +660,7 @@ export default function SignUp() {
                     onChange={(e) => {
                         setPassword(e.target.value);
                     }}
+                    value={password}
                 />
                 {!passwordValid && (
                     <label className="error">
@@ -638,6 +684,7 @@ export default function SignUp() {
                     onChange={(e) => {
                         setConfirmPassword(e.target.value);
                     }}
+                    value={confirmPassword}
                 />
                 {!passwordMatchValid && (
                     <label className="error">Passwords doesn't match</label>
@@ -646,8 +693,8 @@ export default function SignUp() {
 
             <a
                 className="btn btn-primary btn-block"
-                onClick={(e) => {
-                    register();
+                onClick={async (e) => {
+                    await register();
                     e.preventDefault();
                 }}
                 role="button"
