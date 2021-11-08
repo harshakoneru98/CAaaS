@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { useCookies } from 'react-cookie';
 import main from '../../public/assets/images/logo_nobg.png';
 
 export default function MainHeader() {
@@ -7,12 +8,19 @@ export default function MainHeader() {
 
     const [isRoute, setIsRoute] = useState('');
 
+    const [emailCookie, setEmailCookie, removeEmailCookie] = useCookies([
+        'email'
+    ]);
+
     useEffect(() => {
         setIsRoute(router.route);
     });
 
     let changeRoute = (elementRoute) => {
         setIsRoute(elementRoute);
+        if (elementRoute == '/') {
+            removeEmailCookie('email', { path: '/' });
+        }
         router.push(elementRoute);
     };
 

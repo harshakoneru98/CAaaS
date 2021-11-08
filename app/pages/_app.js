@@ -6,7 +6,7 @@
 import { Provider } from 'react-redux';
 import Head from 'next/head';
 import App from 'next/app';
-
+import { CookiesProvider } from 'react-cookie';
 import withReduxStore from '../src/store/lib/with-redux-store';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../src/styles/main.css';
@@ -15,7 +15,7 @@ import '../src/styles/app.css';
 
 function MyApp({ Component, pageProps, store }) {
     return (
-        <>
+        <CookiesProvider>
             <Head>
                 <link
                     rel="shortcut icon"
@@ -26,7 +26,7 @@ function MyApp({ Component, pageProps, store }) {
             <Provider store={store}>
                 <Component {...pageProps} />
             </Provider>
-        </>
+        </CookiesProvider>
     );
 }
 
