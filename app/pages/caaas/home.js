@@ -4,9 +4,15 @@
  */
 
 import HomeView from '../../src/views/home/home_view';
+import MainHeader from '../../src/components/mainHeader.component';
 
 function Home() {
-    return <HomeView demo="demo prop" />;
+    return (
+        <div className="App">
+            <MainHeader />
+            <HomeView />
+        </div>
+    );
 }
 
 export default Home;

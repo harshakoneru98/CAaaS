@@ -1,17 +1,7 @@
-/**
- * All the core components come here
- * These components are parent UI elements
- */
+import HomeComponent from '../../components/home.component';
 
-// Like
-/**
- * Home Page
- * Contextual Playground for POC etc.
- */
-
-function HomeView(props) {
-    // some implementation
-    return <div id="root">Sample Template Home</div>;
+function HomeView() {
+    return <HomeComponent />;
 }
 
 export default HomeView;
