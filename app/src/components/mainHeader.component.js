@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useCookies } from 'react-cookie';
+import { useSelector, useDispatch } from 'react-redux';
+import UserDataEmailThunk from '../../redux/actionCreators/UserDataEmailThunk';
 import main from '../../public/assets/images/logo_nobg.png';
 
 export default function MainHeader() {
     const router = useRouter();
+    const dispatch = useDispatch();
 
     const [isRoute, setIsRoute] = useState('');
 
@@ -12,9 +15,17 @@ export default function MainHeader() {
         'email'
     ]);
 
+    const userData = useSelector(
+        (state) => state.UserDataEmailReducer.userData ?? ''
+    );
+
     useEffect(() => {
         setIsRoute(router.route);
     });
+
+    useEffect(() => {
+        dispatch(UserDataEmailThunk(emailCookie.email));
+    }, [emailCookie]);
 
     let changeRoute = (elementRoute) => {
         setIsRoute(elementRoute);
