@@ -26,7 +26,9 @@ export default function MainHeader() {
     });
 
     useEffect(() => {
-        dispatch(UserDataEmailThunk(emailCookie.email));
+        if (emailCookie?.email) {
+            dispatch(UserDataEmailThunk(emailCookie.email));
+        }
     }, [emailCookie]);
 
     useEffect(() => {
