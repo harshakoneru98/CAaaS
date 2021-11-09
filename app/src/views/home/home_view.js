@@ -1,7 +1,13 @@
-import HomeComponent from '../../components/home.component';
-
 function HomeView() {
-    return <HomeComponent />;
+    return (
+        <div>
+            <div>Hello This is Home Page</div>
+            <div>Hello This is Home Page</div>
+            <div>Hello This is Home Page</div>
+            <div>Hello This is Home Page</div>
+            <div>Hello This is Home Page</div>
+        </div>
+    );
 }
 
 export default HomeView;

@@ -94,7 +94,13 @@ export default function MainHeader() {
                         style={{ display: isOpen ? 'block' : 'none' }}
                         aria-labelledby="dropdownMenuButton"
                     >
-                        <a className="dropdown-item" href="#">
+                        <a
+                            className="dropdown-item"
+                            onClick={(e) => {
+                                changeRoute('/caaas/profile');
+                                e.preventDefault();
+                            }}
+                        >
                             My Profile
                         </a>
                         <a
