@@ -40,8 +40,10 @@ export default function MainHeader() {
         setIsRoute(elementRoute);
         if (elementRoute == '/') {
             removeEmailCookie('email', { path: '/' });
+            window.location.href = elementRoute;
+        } else {
+            router.push(elementRoute);
         }
-        router.push(elementRoute);
     };
 
     let changeOpen = (status) => {
