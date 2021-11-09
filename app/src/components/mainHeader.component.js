@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useCookies } from 'react-cookie';
 import { useSelector, useDispatch } from 'react-redux';
 import UserDataEmailThunk from '../../redux/actionCreators/UserDataEmailThunk';
-import main from '../../public/assets/images/logo_nobg.png';
+import main from '../../public/assets/images/logo_nobg.jpeg';
 
 export default function MainHeader() {
     const router = useRouter();
+    const myRef = useRef();
     const dispatch = useDispatch();
 
     const [isRoute, setIsRoute] = useState('');
+    const [isOpen, setIsOpen] = useState(false);
 
     const [emailCookie, setEmailCookie, removeEmailCookie] = useCookies([
         'email'
@@ -27,12 +29,27 @@ export default function MainHeader() {
         dispatch(UserDataEmailThunk(emailCookie.email));
     }, [emailCookie]);
 
+    useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.addEventListener('mousedown', handleClickOutside);
+    });
+
     let changeRoute = (elementRoute) => {
         setIsRoute(elementRoute);
         if (elementRoute == '/') {
             removeEmailCookie('email', { path: '/' });
         }
         router.push(elementRoute);
+    };
+
+    let changeOpen = (status) => {
+        setIsOpen(status);
+    };
+
+    const handleClickOutside = (e) => {
+        if (!myRef?.current?.contains(e.target)) {
+            setIsOpen(false);
+        }
     };
 
     return (
@@ -56,15 +73,41 @@ export default function MainHeader() {
                 >
                     Check Score
                 </a>
-                <a
-                    className="p-2 text-dark"
-                    onClick={(e) => {
-                        changeRoute('/');
-                        e.preventDefault();
-                    }}
-                >
-                    Logout
-                </a>
+                <span className="dropdown">
+                    <a
+                        className="dropdown-toggle dropdown-name"
+                        onClick={(e) => {
+                            changeOpen(!isOpen);
+                            e.preventDefault();
+                        }}
+                        data-toggle="dropdown"
+                    >
+                        {userData?.firstName
+                            ? 'Hello ' + userData?.firstName
+                            : 'Hello'}
+                        <span className="caret"></span>
+                    </a>
+
+                    <div
+                        className="dropdown-menu"
+                        ref={myRef}
+                        style={{ display: isOpen ? 'block' : 'none' }}
+                        aria-labelledby="dropdownMenuButton"
+                    >
+                        <a className="dropdown-item" href="#">
+                            My Profile
+                        </a>
+                        <a
+                            className="dropdown-item"
+                            onClick={(e) => {
+                                changeRoute('/');
+                                e.preventDefault();
+                            }}
+                        >
+                            Logout
+                        </a>
+                    </div>
+                </span>
             </nav>
         </div>
     );
