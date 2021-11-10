@@ -91,3 +91,32 @@
 .nav-highlight{
     font-weight: 700;
 }
+
+table {
+    margin: auto;
+    width: 50% !important;
+    margin-bottom: 30px;
+    margin-top: 10px;
+}
+
+/* table a{
+    background-color: #137dc5 !important;
+    border-color: #137dc5 !important;
+}
+
+table a.active{
+    background-color: #115c8f !important;
+    border-color: #115c8f !important;
+} */
+
+table a{
+    background-color: white !important;
+    border-color: black !important;
+    color: black !important;
+}
+
+table a.active{
+    background-color: #115c8f !important;
+    border-color: #115c8f !important;
+    color: white !important
+}
