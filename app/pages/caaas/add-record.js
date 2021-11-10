@@ -1,13 +1,13 @@
-import ScoreView from '../../src/views/records/check_score_view';
+import AddRecordView from '../../src/views/records/add_record';
 import MainHeader from '../../src/components/mainHeader.component';
 
-function CheckScore() {
+function AddRecord() {
     return (
         <div className="App">
             <MainHeader />
-            <ScoreView />
+            <AddRecordView />
         </div>
     );
 }
 
-export default CheckScore;
+export default AddRecord;
