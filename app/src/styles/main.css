@@ -56,7 +56,32 @@
 }
 
 .navbar-brand img{
-    height: 3em;
+    height: 2.7em;
+}
+
+.main-nav-brand{
+    margin-right: auto !important;
+}
+
+.main-header a, .dropdown a {
+    text-decoration: none;
+}
+
+.main-header nav a{
+    color: rgba(0,0,0,.55) !important;
+}
+
+.dropdown a {
+    color: black;
+}
+
+.dropdown-name{
+    margin-left: 30px;
+}
+
+.dropdown-menu{
+    margin-left: 5.2em;
+    margin-top: 0.5em;
 }
 
 .fixed-top{

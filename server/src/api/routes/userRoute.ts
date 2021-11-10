@@ -13,6 +13,7 @@ const Controller = new UserController()
 
 // Getting trusted ticket from tableau server
 router.post('/create/', Controller.create_user)
-router.get('/userId/:email', Controller.get_user_by_email)
+router.get('/userId/:email', Controller.get_userId_by_email)
+router.get('/userData/:email', Controller.get_userData_by_email)
 
 export default router;

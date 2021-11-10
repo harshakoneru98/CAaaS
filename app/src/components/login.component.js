@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import * as cacheStore from 'node-cache';
+import { useCookies } from 'react-cookie';
 
 export default function Login() {
     const router = useRouter();
@@ -10,6 +11,8 @@ export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [valid, setValid] = useState(true);
+
+    const [emailCookie, setEmailCookie] = useCookies(['email']);
 
     const level = useSelector((state) => state.MainViewReducer.level ?? '');
 
@@ -45,6 +48,7 @@ export default function Login() {
 
         if (checkStatus == 'Valid') {
             setValid(true);
+            setEmailCookie('email', params.email, { path: '/' });
             changeRoute('/caaas/home');
         } else {
             setValid(false);

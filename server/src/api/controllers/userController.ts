@@ -61,7 +61,7 @@ export default class UserController {
                         organisation: params.organisation || 'self',
                         phoneNumber: params.phoneNumber,
                         gender: params.gender,
-                        ethnicity: params.ethnicity
+                        ethnicty: params.ethnicty
                     }
                 };
 
@@ -111,7 +111,7 @@ export default class UserController {
     };
 
     // Get userId by email
-    public get_user_by_email = async (req: Request, res: Response) => {
+    public get_userId_by_email = async (req: Request, res: Response) => {
         let email = req.params.email;
 
         try {
@@ -135,6 +135,61 @@ export default class UserController {
                     res.send({
                         status: 200,
                         data: userId,
+                        message: 'OK'
+                    });
+                }
+            });
+        } catch (err) {
+            res.status(500).json({
+                message: err
+            });
+        }
+    };
+
+    // Get userId by email
+    public get_userData_by_email = async (req: Request, res: Response) => {
+        let email = req.params.email;
+        let myCache = new store();
+
+        try {
+            await fetch('http://localhost:8080/api/user/userId/' + email)
+                .then((res) => res.json())
+                .then((data) => {
+                    myCache.mset([
+                        { key: 'userId', val: data.data, ttl: 10000 }
+                    ]);
+                });
+
+            let userId = myCache.mget(['userId']).userId;
+
+            var params = {
+                TableName: 'user_data',
+                Key: {
+                    PK: 'USR#' + userId,
+                    SK: '#METADATA#' + userId
+                }
+            };
+
+            var documentClient = new AWS.DynamoDB.DocumentClient();
+
+            documentClient.get(params, function (err, data) {
+                if (err) console.log(err);
+                else {
+                    let data_res = {
+                        firstName: data.Item.firstName,
+                        lastName: data.Item.lastName,
+                        phoneNumber: data.Item.phoneNumber,
+                        city: data.Item.city,
+                        state: data.Item.state,
+                        dob: data.Item.dob,
+                        organisation: data.Item.organisation,
+                        gender: data.Item.gender,
+                        ethnicty: data.Item.ethnicty
+                    }
+
+                    res.send({
+                        status: 200,
+                        data: data_res,
                         message: 'OK'
                     });
                 }

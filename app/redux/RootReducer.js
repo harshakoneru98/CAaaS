@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import MainViewReducer from './Reducers/MainReducer';
-import UserIdEmailReducer from './Reducers/UserIdEmailReducer';
+import UserDataEmailReducer from './Reducers/UserDataEmailReducer';
 
 /**
  * TODO: Add as many reducers as you want depending on requirement, and combine them here.
@@ -10,7 +10,7 @@ import UserIdEmailReducer from './Reducers/UserIdEmailReducer';
 
 const ReduxReducer = combineReducers({
     MainViewReducer,
-    UserIdEmailReducer
+    UserDataEmailReducer
 });
 
 export default ReduxReducer;

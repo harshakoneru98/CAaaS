@@ -1,7 +1,7 @@
 export default async (req, res) => {
     let email = req.url.split('?email=')[1];
 
-    await fetch('http://localhost:8080/api/user/userId/' + email)
+    await fetch('http://localhost:8080/api/user/userData/' + email)
         .then((res) => res.json())
         .then((data) => {
             res.send({
