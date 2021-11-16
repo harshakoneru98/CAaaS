@@ -131,7 +131,8 @@ function AddRecord() {
                 Residence_type: residenceType,
                 avg_glucose_level: avgGlucoseLevel,
                 bmi: bmi,
-                smoking_status: smokingStatus
+                smoking_status: smokingStatus,
+                email: userData?.email
             };
             addRecord(params);
         }
