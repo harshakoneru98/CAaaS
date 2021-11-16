@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import moment from 'moment';
 
 function AddRecord() {
     const [isSelection, setIsSelection] = useState('table');
+    const [isStatus, setIsStatus] = useState(true);
 
     const [hyperTension, setHyperTension] = useState('');
     const [heartDisease, setHeartDisease] = useState('');
@@ -12,8 +15,126 @@ function AddRecord() {
     const [bmi, setBmi] = useState('');
     const [smokingStatus, setSmokingStatus] = useState('');
 
+    const [hyperTensionValid, setHyperTensionValid] = useState(true);
+    const [heartDiseaseValid, setHeartDiseaseValid] = useState(true);
+    const [evenMarriedValid, setEvenMarriedValid] = useState(true);
+    const [workTypeValid, setWorkTypeValid] = useState(true);
+    const [residenceTypeValid, setResidenceTypeValid] = useState(true);
+    const [avgGlucoseLevelValid, setAvgGlucoseLevelValid] = useState(true);
+    const [bmiValid, setBmiValid] = useState(true);
+    const [smokingStatusValid, setSmokingStatusValid] = useState(true);
+
+    const numberRegrex = /^(?=.+)(?:[1-9]\d*|0)?(?:\.\d+)?$/;
+    let params;
+
+    const userData = useSelector(
+        (state) => state.UserDataEmailReducer.userData ?? ''
+    );
+
+    useEffect(() => {
+        setHyperTension('');
+        setHeartDisease('');
+        setEvenMarried('');
+        setWorkType('');
+        setResidenceType('');
+        setAvgGlucoseLevel('');
+        setBmi('');
+        setSmokingStatus('');
+
+        setHyperTensionValid(true);
+        setHeartDiseaseValid(true);
+        setEvenMarriedValid(true);
+        setWorkTypeValid(true);
+        setResidenceTypeValid(true);
+        setAvgGlucoseLevelValid(true);
+        setBmiValid(true);
+        setSmokingStatusValid(true);
+    }, [isStatus, isSelection]);
+
     let changeSelection = (status) => {
         setIsSelection(status);
+    };
+
+    let addRecord = (params) => {
+        setIsStatus(!isStatus);
+        console.log('Params : ', params);
+    };
+
+    let addRecordSubmit = () => {
+        if (hyperTension != '') {
+            setHyperTensionValid(true);
+        } else {
+            setHyperTensionValid(false);
+        }
+
+        if (heartDisease != '') {
+            setHeartDiseaseValid(true);
+        } else {
+            setHeartDiseaseValid(false);
+        }
+
+        if (evenMarried != '') {
+            setEvenMarriedValid(true);
+        } else {
+            setEvenMarriedValid(false);
+        }
+
+        if (workType != '') {
+            setWorkTypeValid(true);
+        } else {
+            setWorkTypeValid(false);
+        }
+
+        if (residenceType != '') {
+            setResidenceTypeValid(true);
+        } else {
+            setResidenceTypeValid(false);
+        }
+
+        if (numberRegrex.test(avgGlucoseLevel)) {
+            setAvgGlucoseLevelValid(true);
+        } else {
+            setAvgGlucoseLevelValid(false);
+        }
+
+        if (numberRegrex.test(bmi)) {
+            setBmiValid(true);
+        } else {
+            setBmiValid(false);
+        }
+
+        if (smokingStatus != '') {
+            setSmokingStatusValid(true);
+        } else {
+            setSmokingStatusValid(false);
+        }
+
+        if (
+            hyperTension != '' &&
+            heartDisease != '' &&
+            evenMarried != '' &&
+            workType != '' &&
+            residenceType != '' &&
+            numberRegrex.test(avgGlucoseLevel) &&
+            numberRegrex.test(bmi) &&
+            smokingStatus != ''
+        ) {
+            params = {
+                gender: userData?.gender,
+                age: moment()
+                    .diff(moment(userData?.dob, 'YYYY-MM-DD'), 'years')
+                    .toString(),
+                hypertension: hyperTension,
+                heart_disease: heartDisease,
+                even_married: evenMarried,
+                work_type: workType,
+                Residence_type: residenceType,
+                avg_glucose_level: avgGlucoseLevel,
+                bmi: bmi,
+                smoking_status: smokingStatus
+            };
+            addRecord(params);
+        }
     };
 
     return (
@@ -61,8 +182,15 @@ function AddRecord() {
 
                     {isSelection == 'table' && (
                         <div>
-                            <div className="form-group">
+                            <div
+                                className={
+                                    !hyperTensionValid
+                                        ? 'form-group form-error'
+                                        : 'form-group'
+                                }
+                            >
                                 <label>Do you have Hyper Tension?</label>
+                                <span> *</span>
 
                                 <div className="form-check">
                                     <input
@@ -73,9 +201,9 @@ function AddRecord() {
                                             setHyperTension(e.target.value);
                                         }}
                                         id="oneHyperTension"
-                                        value="1"
+                                        value="Yes"
                                         checked={
-                                            hyperTension == '1' ? true : false
+                                            hyperTension == 'Yes' ? true : false
                                         }
                                     />
                                     <label
@@ -95,9 +223,9 @@ function AddRecord() {
                                             setHyperTension(e.target.value);
                                         }}
                                         id="zeroHyperTension"
-                                        value="0"
+                                        value="No"
                                         checked={
-                                            hyperTension == '0' ? true : false
+                                            hyperTension == 'No' ? true : false
                                         }
                                     />
                                     <label
@@ -107,10 +235,23 @@ function AddRecord() {
                                         No
                                     </label>
                                 </div>
+
+                                {!hyperTensionValid && (
+                                    <label className="error">
+                                        Select atleast one of the above options
+                                    </label>
+                                )}
                             </div>
 
-                            <div className="form-group">
+                            <div
+                                className={
+                                    !heartDiseaseValid
+                                        ? 'form-group form-error'
+                                        : 'form-group'
+                                }
+                            >
                                 <label>Do you have any Heart Diseases?</label>
+                                <span> *</span>
 
                                 <div className="form-check">
                                     <input
@@ -121,9 +262,9 @@ function AddRecord() {
                                             setHeartDisease(e.target.value);
                                         }}
                                         id="oneHeartDisease"
-                                        value="1"
+                                        value="Yes"
                                         checked={
-                                            heartDisease == '1' ? true : false
+                                            heartDisease == 'Yes' ? true : false
                                         }
                                     />
                                     <label
@@ -143,9 +284,9 @@ function AddRecord() {
                                             setHeartDisease(e.target.value);
                                         }}
                                         id="zeroHeartDisease"
-                                        value="0"
+                                        value="No"
                                         checked={
-                                            heartDisease == '0' ? true : false
+                                            heartDisease == 'No' ? true : false
                                         }
                                     />
                                     <label
@@ -155,10 +296,23 @@ function AddRecord() {
                                         No
                                     </label>
                                 </div>
+
+                                {!heartDiseaseValid && (
+                                    <label className="error">
+                                        Select atleast one of the above options
+                                    </label>
+                                )}
                             </div>
 
-                            <div className="form-group">
+                            <div
+                                className={
+                                    !evenMarriedValid
+                                        ? 'form-group form-error'
+                                        : 'form-group'
+                                }
+                            >
                                 <label>Have you ever been married?</label>
+                                <span> *</span>
 
                                 <div className="form-check">
                                     <input
@@ -203,10 +357,23 @@ function AddRecord() {
                                         No
                                     </label>
                                 </div>
+
+                                {!evenMarriedValid && (
+                                    <label className="error">
+                                        Select atleast one of the above options
+                                    </label>
+                                )}
                             </div>
 
-                            <div className="form-group">
+                            <div
+                                className={
+                                    !workTypeValid
+                                        ? 'form-group form-error'
+                                        : 'form-group'
+                                }
+                            >
                                 <label>What is your Work Type?</label>
+                                <span> *</span>
 
                                 <div className="form-check">
                                     <input
@@ -217,9 +384,9 @@ function AddRecord() {
                                             setWorkType(e.target.value);
                                         }}
                                         id="childrenWorkType"
-                                        value="children"
+                                        value="Children"
                                         checked={
-                                            workType == 'children'
+                                            workType == 'Children'
                                                 ? true
                                                 : false
                                         }
@@ -241,9 +408,9 @@ function AddRecord() {
                                             setWorkType(e.target.value);
                                         }}
                                         id="govtWorkType"
-                                        value="Govt_job"
+                                        value="Government Job"
                                         checked={
-                                            workType == 'Govt_job'
+                                            workType == 'Government Job'
                                                 ? true
                                                 : false
                                         }
@@ -265,9 +432,11 @@ function AddRecord() {
                                             setWorkType(e.target.value);
                                         }}
                                         id="privateWorkType"
-                                        value="Private"
+                                        value="Private Job"
                                         checked={
-                                            workType == 'Private' ? true : false
+                                            workType == 'Private Job'
+                                                ? true
+                                                : false
                                         }
                                     />
                                     <label
@@ -287,9 +456,10 @@ function AddRecord() {
                                             setWorkType(e.target.value);
                                         }}
                                         id="selfWorkType"
-                                        value="Self-employed"
+                                        value="Self Employed / Business"
                                         checked={
-                                            workType == 'Self-employed'
+                                            workType ==
+                                            'Self Employed / Business'
                                                 ? true
                                                 : false
                                         }
@@ -311,9 +481,9 @@ function AddRecord() {
                                             setWorkType(e.target.value);
                                         }}
                                         id="noWorkType"
-                                        value="Never_worked"
+                                        value="Not Working"
                                         checked={
-                                            workType == 'Never_worked'
+                                            workType == 'Not Working'
                                                 ? true
                                                 : false
                                         }
@@ -325,10 +495,23 @@ function AddRecord() {
                                         Not Working
                                     </label>
                                 </div>
+
+                                {!workTypeValid && (
+                                    <label className="error">
+                                        Select atleast one of the above options
+                                    </label>
+                                )}
                             </div>
 
-                            <div className="form-group">
+                            <div
+                                className={
+                                    !residenceTypeValid
+                                        ? 'form-group form-error'
+                                        : 'form-group'
+                                }
+                            >
                                 <label>What is your residence type?</label>
+                                <span> *</span>
 
                                 <div className="form-check">
                                     <input
@@ -377,15 +560,28 @@ function AddRecord() {
                                         Rural
                                     </label>
                                 </div>
+
+                                {!residenceTypeValid && (
+                                    <label className="error">
+                                        Select atleast one of the above options
+                                    </label>
+                                )}
                             </div>
 
-                            <div className="form-group">
+                            <div
+                                className={
+                                    !avgGlucoseLevelValid
+                                        ? 'form-group form-error'
+                                        : 'form-group'
+                                }
+                            >
                                 <label>
                                     What is the average glucose level in your
                                     blood?
                                 </label>
+                                <span> *</span>
                                 <input
-                                    type="number"
+                                    type="text"
                                     className="form-control"
                                     placeholder="Average Glucose Level"
                                     onChange={(e) => {
@@ -393,14 +589,27 @@ function AddRecord() {
                                     }}
                                     value={avgGlucoseLevel}
                                 />
+
+                                {!avgGlucoseLevelValid && (
+                                    <label className="error">
+                                        Enter valid Average Glucose level values
+                                    </label>
+                                )}
                             </div>
 
-                            <div className="form-group">
+                            <div
+                                className={
+                                    !bmiValid
+                                        ? 'form-group form-error'
+                                        : 'form-group'
+                                }
+                            >
                                 <label>
                                     What is your Body Mass Index(BMI)?
                                 </label>
+                                <span> *</span>
                                 <input
-                                    type="number"
+                                    type="text"
                                     className="form-control"
                                     placeholder="BMI"
                                     onChange={(e) => {
@@ -408,10 +617,22 @@ function AddRecord() {
                                     }}
                                     value={bmi}
                                 />
+                                {!bmiValid && (
+                                    <label className="error">
+                                        Enter valid BMI values
+                                    </label>
+                                )}
                             </div>
 
-                            <div className="form-group">
+                            <div
+                                className={
+                                    !smokingStatusValid
+                                        ? 'form-group form-error'
+                                        : 'form-group'
+                                }
+                            >
                                 <label>What is your Smoking Status?</label>
+                                <span> *</span>
 
                                 <div className="form-check">
                                     <input
@@ -422,9 +643,9 @@ function AddRecord() {
                                             setSmokingStatus(e.target.value);
                                         }}
                                         id="formerSmokingStatus"
-                                        value="formerly smoked"
+                                        value="Formerly Smoked"
                                         checked={
-                                            smokingStatus == 'formerly smoked'
+                                            smokingStatus == 'Formerly Smoked'
                                                 ? true
                                                 : false
                                         }
@@ -446,9 +667,9 @@ function AddRecord() {
                                             setSmokingStatus(e.target.value);
                                         }}
                                         id="neverSmokingStatus"
-                                        value="never smoked"
+                                        value="Never Smoked"
                                         checked={
-                                            smokingStatus == 'never smoked'
+                                            smokingStatus == 'Never Smoked'
                                                 ? true
                                                 : false
                                         }
@@ -470,9 +691,9 @@ function AddRecord() {
                                             setSmokingStatus(e.target.value);
                                         }}
                                         id="smokesSmokingStatus"
-                                        value="smokes"
+                                        value="Smokes"
                                         checked={
-                                            smokingStatus == 'smokes'
+                                            smokingStatus == 'Smokes'
                                                 ? true
                                                 : false
                                         }
@@ -494,9 +715,9 @@ function AddRecord() {
                                             setSmokingStatus(e.target.value);
                                         }}
                                         id="unknownSmokingStatus"
-                                        value="Unknown"
+                                        value="Prefer not to say"
                                         checked={
-                                            smokingStatus == 'Unknown'
+                                            smokingStatus == 'Prefer not to say'
                                                 ? true
                                                 : false
                                         }
@@ -508,11 +729,18 @@ function AddRecord() {
                                         Prefer not to say
                                     </label>
                                 </div>
+
+                                {!smokingStatusValid && (
+                                    <label className="error">
+                                        Select atleast one of the above options
+                                    </label>
+                                )}
                             </div>
 
                             <a
                                 className="btn btn-primary btn-block"
                                 onClick={(e) => {
+                                    addRecordSubmit();
                                     e.preventDefault();
                                 }}
                                 role="button"
