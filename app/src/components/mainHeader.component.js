@@ -75,7 +75,16 @@ export default function MainHeader() {
                         e.preventDefault();
                     }}
                 >
-                    Check Score
+                    Check Scores
+                </a>
+                <a
+                    className="p-2 text-dark"
+                    onClick={(e) => {
+                        changeRoute('/caaas/add-record');
+                        e.preventDefault();
+                    }}
+                >
+                    Add Record
                 </a>
                 <span className="dropdown">
                     <a
