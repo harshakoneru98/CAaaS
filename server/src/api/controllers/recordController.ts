@@ -38,7 +38,7 @@ export default class RecordController {
             var params = {
                 Body: base64data,
                 Bucket: 'caaas-tabular',
-                Key: bodyParams.email + 'sample.csv',
+                Key: bodyParams.email + '$sample.csv',
             };
             s3.putObject(params, function (err, data) {
                 if (err) {

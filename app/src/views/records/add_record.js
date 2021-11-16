@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useCookies } from 'react-cookie';
 import moment from 'moment';
 
 function AddRecord() {
@@ -26,6 +27,8 @@ function AddRecord() {
 
     const numberRegrex = /^(?=.+)(?:[1-9]\d*|0)?(?:\.\d+)?$/;
     let params;
+
+    const [emailCookie, setEmailCookie] = useCookies(['email']);
 
     const userData = useSelector(
         (state) => state.UserDataEmailReducer.userData ?? ''
@@ -55,9 +58,23 @@ function AddRecord() {
         setIsSelection(status);
     };
 
-    let addRecord = (params) => {
+    let addRecord = async (params) => {
         setIsStatus(!isStatus);
         console.log('Params : ', params);
+        await fetch('/api/postTabularRecord', {
+            method: 'POST',
+            body: JSON.stringify(params),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                // myCache.mset([
+                //     { key: 'userStatus', val: data.data, ttl: 10000 }
+                // ]);
+            });
+        // let userStatus = myCache.mget(['userStatus']).userStatus;
     };
 
     let addRecordSubmit = () => {
@@ -132,7 +149,8 @@ function AddRecord() {
                 avg_glucose_level: avgGlucoseLevel,
                 bmi: bmi,
                 smoking_status: smokingStatus,
-                email: userData?.email
+                email: emailCookie.email,
+                time_created: moment().format('MMMM Do YYYY, h:mm:ss a')
             };
             addRecord(params);
         }
