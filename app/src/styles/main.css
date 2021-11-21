@@ -92,7 +92,7 @@
     font-weight: 700;
 }
 
-table {
+table.mainTable {
     margin: auto;
     width: 50% !important;
     margin-bottom: 30px;
@@ -109,14 +109,21 @@ table a.active{
     border-color: #115c8f !important;
 } */
 
-table a{
+table.mainTable a{
     background-color: white !important;
     border-color: black !important;
     color: black !important;
 }
 
-table a.active{
+table.mainTable a.active{
     background-color: #115c8f !important;
     border-color: #115c8f !important;
     color: white !important
+}
+
+table {
+    margin: auto;
+    width: 35% !important;
+    margin-bottom: 30px;
+    margin-top: 10px;
 }

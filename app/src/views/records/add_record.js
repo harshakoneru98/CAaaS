@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useCookies } from 'react-cookie';
 import moment from 'moment';
+import { useDropzone } from 'react-dropzone';
 
 function AddRecord() {
     const [isSelection, setIsSelection] = useState('table');
@@ -29,6 +30,8 @@ function AddRecord() {
     let params;
 
     const [emailCookie, setEmailCookie] = useCookies(['email']);
+
+    const [files, setFiles] = useState([]);
 
     const userData = useSelector(
         (state) => state.UserDataEmailReducer.userData ?? ''
@@ -156,13 +159,43 @@ function AddRecord() {
         }
     };
 
+    const { getRootProps, getInputProps } = useDropzone({
+        accept: 'image/jpeg',
+        onDrop: (acceptedFiles) => {
+            setFiles(
+                acceptedFiles.map((file) =>
+                    Object.assign(file, {
+                        preview: URL.createObjectURL(file)
+                    })
+                )
+            );
+        }
+    });
+
+    const images = files.map((file) => (
+        <div key={file.name}>
+            <div>
+                <img
+                    src={file.preview}
+                    style={{ width: '380px' }}
+                    alt="preview"
+                    className="previewImage"
+                />
+            </div>
+        </div>
+    ));
+
+    let uploadFile = () => {
+        console.log('Files : ', files[0]);
+    };
+
     return (
         <div className="auth-wrapper">
             <div className="auth-inner">
                 <form className="form">
                     <h3>Add Record</h3>
 
-                    <table>
+                    <table className="mainTable">
                         <tbody>
                             <tr>
                                 <th>
@@ -766,6 +799,58 @@ function AddRecord() {
                             >
                                 Submit the Record
                             </a>
+                        </div>
+                    )}
+
+                    {isSelection != 'table' && (
+                        <div className="wrapper">
+                            <div className="container">
+                                <h4>Upload a image file</h4>
+                                <div className="upload-container">
+                                    <div className="border-container">
+                                        <div {...getRootProps()}>
+                                            <input {...getInputProps()} />
+                                            <p>
+                                                Drag and drop a file here, or
+                                                click
+                                            </p>
+                                            <p className="fileNames">
+                                                Only .jpeg files allowed
+                                            </p>
+                                        </div>
+                                        <div>{images}</div>
+                                    </div>
+                                </div>
+
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <th>
+                                                <a
+                                                    className="btn btn-success"
+                                                    onClick={(e) => {
+                                                        uploadFile();
+                                                        e.preventDefault();
+                                                    }}
+                                                >
+                                                    Upload
+                                                </a>
+                                            </th>
+                                            <th>
+                                                <a
+                                                    className="btn btn-danger"
+                                                    onClick={(e) => {
+                                                        setFiles([]);
+                                                        e.preventDefault();
+                                                    }}
+                                                >
+                                                    Clear
+                                                </a>
+                                            </th>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     )}
                 </form>

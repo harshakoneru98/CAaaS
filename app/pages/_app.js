@@ -12,6 +12,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../src/styles/main.css';
 import '../src/styles/auth.css';
 import '../src/styles/app.css';
+import '../src/styles/fileUpload.css';
 
 function MyApp({ Component, pageProps, store }) {
     return (
