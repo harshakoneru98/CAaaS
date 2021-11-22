@@ -66,7 +66,7 @@ export default class RecordController {
         try {
 
             var params = {
-                Bucket: 'caaas-tabular',
+                Bucket: 'caaas-image',
                 Key: fileName
             };
 
