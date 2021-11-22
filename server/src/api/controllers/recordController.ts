@@ -58,6 +58,8 @@ export default class RecordController {
     // Adding Image Record
     public add_image_record = async (req: Request, res: Response) => {
         let fileName = req.body.fileName;
+        let size = req.body.size;
+        let lastModified = req.body.lastModified
 
         var s3 = new AWS.S3();
 
@@ -74,8 +76,6 @@ export default class RecordController {
                 } else {
                     let url = s3.getSignedUrl('getObject', params);
 
-                    // console.log('Url : ', url)
-
                     let options = {
                         pythonPath: config.Python_Path,
                         scriptPath: 'src/api/controllers',
@@ -86,7 +86,18 @@ export default class RecordController {
                         if (err) {
                             throw err;
                         }
-                        console.log('Results : ', results)
+                        console.log('Results : ', Math.floor(results[0]*100))
+
+                        let dataOutput = {
+                            name: fileName,
+                            size: Math.round(size * 10 / 1024) / 10,
+                            lastModified: lastModified,
+                            url: url,
+                            score: Math.floor(results[0]*100)
+                        }
+
+                        console.log(dataOutput)
+
                         res.send({
                             status: 200,
                             data: results,

@@ -196,10 +196,16 @@ function AddRecord() {
                     type: files[0].type
                 }
             );
-            console.log('New File : ', myNewFile);
 
             formData.append('file', myNewFile);
             formData.append('fileName', myNewFile.name);
+            formData.append('size', myNewFile.size);
+            formData.append(
+                'lastModified',
+                moment(myNewFile.lastModifiedDate).format(
+                    'MMMM Do YYYY, h:mm:ss a'
+                )
+            );
 
             await fetch('http://localhost:8080/api/record/create/image/', {
                 method: 'POST',
