@@ -1,0 +1,16 @@
+.home-container{
+    padding-top: 2em;
+}
+
+.home-container img{
+    height: 60vh;
+    width: 45vw;
+}
+
+.home-container p{
+    text-align: justify;
+}
+
+.home-container .first-p{
+    padding-top: 1.5em;
+}
