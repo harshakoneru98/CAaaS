@@ -185,8 +185,36 @@ function AddRecord() {
         </div>
     ));
 
-    let uploadFile = () => {
-        console.log('Files : ', files[0]);
+    let uploadFile = async () => {
+        if (files[0]) {
+            const formData = new FormData();
+
+            const myNewFile = new File(
+                [files[0]],
+                moment().valueOf() + '-' + files[0].name,
+                {
+                    type: files[0].type
+                }
+            );
+            console.log('New File : ', myNewFile);
+
+            formData.append('file', myNewFile);
+            formData.append('fileName', myNewFile.name);
+
+            await fetch('http://localhost:8080/api/record/create/image/', {
+                method: 'POST',
+                body: formData
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    // myCache.mset([
+                    //     { key: 'userStatus', val: data.data, ttl: 10000 }
+                    // ]);
+                });
+            // let userStatus = myCache.mget(['userStatus']).userStatus;
+
+            setFiles([]);
+        }
     };
 
     return (
@@ -827,7 +855,11 @@ function AddRecord() {
                                         <tr>
                                             <th>
                                                 <a
-                                                    className="btn btn-success"
+                                                    className={
+                                                        files[0]?.name
+                                                            ? 'btn btn-success'
+                                                            : 'btn btn-success is-diabled'
+                                                    }
                                                     onClick={(e) => {
                                                         uploadFile();
                                                         e.preventDefault();

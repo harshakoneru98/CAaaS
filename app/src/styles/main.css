@@ -127,3 +127,8 @@ table {
     margin-bottom: 30px;
     margin-top: 10px;
 }
+
+.is-diabled{
+    cursor: not-allowed;
+    opacity: 0.5;
+}
