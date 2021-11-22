@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useCookies } from 'react-cookie';
 import moment from 'moment';
+import { useDropzone } from 'react-dropzone';
 
 function AddRecord() {
     const [isSelection, setIsSelection] = useState('table');
@@ -26,6 +28,10 @@ function AddRecord() {
 
     const numberRegrex = /^(?=.+)(?:[1-9]\d*|0)?(?:\.\d+)?$/;
     let params;
+
+    const [emailCookie, setEmailCookie] = useCookies(['email']);
+
+    const [files, setFiles] = useState([]);
 
     const userData = useSelector(
         (state) => state.UserDataEmailReducer.userData ?? ''
@@ -55,9 +61,23 @@ function AddRecord() {
         setIsSelection(status);
     };
 
-    let addRecord = (params) => {
+    let addRecord = async (params) => {
         setIsStatus(!isStatus);
         console.log('Params : ', params);
+        await fetch('/api/postTabularRecord', {
+            method: 'POST',
+            body: JSON.stringify(params),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                // myCache.mset([
+                //     { key: 'userStatus', val: data.data, ttl: 10000 }
+                // ]);
+            });
+        // let userStatus = myCache.mget(['userStatus']).userStatus;
     };
 
     let addRecordSubmit = () => {
@@ -132,9 +152,74 @@ function AddRecord() {
                 avg_glucose_level: avgGlucoseLevel,
                 bmi: bmi,
                 smoking_status: smokingStatus,
-                email: userData?.email
+                email: emailCookie.email,
+                time_created: moment().format('MMMM Do YYYY, h:mm:ss a')
             };
             addRecord(params);
+        }
+    };
+
+    const { getRootProps, getInputProps } = useDropzone({
+        accept: 'image/jpeg',
+        onDrop: (acceptedFiles) => {
+            setFiles(
+                acceptedFiles.map((file) =>
+                    Object.assign(file, {
+                        preview: URL.createObjectURL(file)
+                    })
+                )
+            );
+        }
+    });
+
+    const images = files.map((file) => (
+        <div key={file.name}>
+            <div>
+                <img
+                    src={file.preview}
+                    style={{ width: '380px' }}
+                    alt="preview"
+                    className="previewImage"
+                />
+            </div>
+        </div>
+    ));
+
+    let uploadFile = async () => {
+        if (files[0]) {
+            const formData = new FormData();
+
+            const myNewFile = new File(
+                [files[0]],
+                moment().valueOf() + '-' + files[0].name,
+                {
+                    type: files[0].type
+                }
+            );
+
+            formData.append('file', myNewFile);
+            formData.append('fileName', myNewFile.name);
+            formData.append('size', myNewFile.size);
+            formData.append(
+                'lastModified',
+                moment(myNewFile.lastModifiedDate).format(
+                    'MMMM Do YYYY, h:mm:ss a'
+                )
+            );
+
+            await fetch('http://localhost:8080/api/record/create/image/', {
+                method: 'POST',
+                body: formData
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    // myCache.mset([
+                    //     { key: 'userStatus', val: data.data, ttl: 10000 }
+                    // ]);
+                });
+            // let userStatus = myCache.mget(['userStatus']).userStatus;
+
+            setFiles([]);
         }
     };
 
@@ -144,7 +229,7 @@ function AddRecord() {
                 <form className="form">
                     <h3>Add Record</h3>
 
-                    <table>
+                    <table className="mainTable">
                         <tbody>
                             <tr>
                                 <th>
@@ -748,6 +833,62 @@ function AddRecord() {
                             >
                                 Submit the Record
                             </a>
+                        </div>
+                    )}
+
+                    {isSelection != 'table' && (
+                        <div className="wrapper">
+                            <div className="container">
+                                <h4>Upload a image file</h4>
+                                <div className="upload-container">
+                                    <div className="border-container">
+                                        <div {...getRootProps()}>
+                                            <input {...getInputProps()} />
+                                            <p>
+                                                Drag and drop a file here, or
+                                                click
+                                            </p>
+                                            <p className="fileNames">
+                                                Only .jpeg files allowed
+                                            </p>
+                                        </div>
+                                        <div>{images}</div>
+                                    </div>
+                                </div>
+
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <th>
+                                                <a
+                                                    className={
+                                                        files[0]?.name
+                                                            ? 'btn btn-success'
+                                                            : 'btn btn-success is-diabled'
+                                                    }
+                                                    onClick={(e) => {
+                                                        uploadFile();
+                                                        e.preventDefault();
+                                                    }}
+                                                >
+                                                    Upload
+                                                </a>
+                                            </th>
+                                            <th>
+                                                <a
+                                                    className="btn btn-danger"
+                                                    onClick={(e) => {
+                                                        setFiles([]);
+                                                        e.preventDefault();
+                                                    }}
+                                                >
+                                                    Clear
+                                                </a>
+                                            </th>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     )}
                 </form>
