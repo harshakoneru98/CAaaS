@@ -79,7 +79,7 @@ export default class RecordController {
                     let options = {
                         pythonPath: config.Python_Path,
                         scriptPath: 'src/api/controllers',
-                        args: [url]
+                        args: [url, fileName]
                       };
 
                       PythonShell.run('deploy.py', options, function (err, results) {
