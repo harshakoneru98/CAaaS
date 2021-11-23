@@ -4,6 +4,7 @@ import { useCookies } from 'react-cookie';
 import moment from 'moment';
 import * as cacheStore from 'node-cache';
 import { useDropzone } from 'react-dropzone';
+import loader from '../../../public/assets/images/loading.gif';
 
 function AddRecord() {
     const [isSelection, setIsSelection] = useState('table');
@@ -52,6 +53,8 @@ function AddRecord() {
         setAvgGlucoseLevel('');
         setBmi('');
         setSmokingStatus('');
+
+        setFiles([]);
 
         setHyperTensionValid(true);
         setHeartDiseaseValid(true);
@@ -850,7 +853,11 @@ function AddRecord() {
                     )}
 
                     {isSelection != 'table' && (
-                        <div className="wrapper">
+                        <div
+                            className={
+                                uploadStatus ? 'wrapper images' : 'wrapper'
+                            }
+                        >
                             <div className="container">
                                 <h4>Upload a image file</h4>
                                 <div className="upload-container">
@@ -865,7 +872,20 @@ function AddRecord() {
                                                 Only .jpeg files allowed
                                             </p>
                                         </div>
-                                        <div>{images}</div>
+                                        <div>
+                                            <div>{images}</div>
+
+                                            <img
+                                                src={loader.src}
+                                                alt="preview"
+                                                className="loader-image"
+                                                style={{
+                                                    display: uploadStatus
+                                                        ? 'block'
+                                                        : 'none'
+                                                }}
+                                            />
+                                        </div>
                                     </div>
                                 </div>
 

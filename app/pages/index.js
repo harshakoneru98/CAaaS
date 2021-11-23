@@ -3,7 +3,6 @@
  * We can route to different components defined in pages directory from here
  */
 import React from 'react';
-import logo from '../public/assets/images/logo.jpg';
 import MainView from '../src/views/main/main_view';
 
 export default function Main() {
