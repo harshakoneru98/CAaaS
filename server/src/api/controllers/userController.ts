@@ -185,7 +185,7 @@ export default class UserController {
                         organisation: data.Item.organisation,
                         gender: data.Item.gender,
                         ethnicty: data.Item.ethnicty
-                    }
+                    };
 
                     res.send({
                         status: 200,
@@ -200,44 +200,4 @@ export default class UserController {
             });
         }
     };
-
-    // public get_user_by_email = async (req: Request, res: Response) => {
-    //     let email = req.params.email;
-
-    //     try {
-    //         var params = {
-    //             TableName: 'user_data',
-    //             IndexName: 'Filter-By-Email',
-    //             KeyConditionExpression: '#PK = :PK',
-    //             ExpressionAttributeNames: { '#PK': 'email' },
-    //             ExpressionAttributeValues: {
-    //                 ':PK': email
-    //             }
-    //         };
-
-    //         var documentClient = new AWS.DynamoDB.DocumentClient();
-
-    //         documentClient.query(params, function (err, data) {
-    //             if (err) console.log(err);
-    //             else {
-    //                 let userId = ''
-    //                 if(data['Count'] == 0){
-    //                     userId = ''
-    //                 }
-    //                 else{
-    //                     userId = data['Items'][0]['PK']
-    //                 }
-    //                 res.send({
-    //                     status: 200,
-    //                     data: userId,
-    //                     message: 'OK'
-    //                 });
-    //             }
-    //         });
-    //     } catch (err) {
-    //         res.status(500).json({
-    //             message: err
-    //         });
-    //     }
-    // };
 }
