@@ -27,6 +27,9 @@ function AddRecord() {
     const [bmiValid, setBmiValid] = useState(true);
     const [smokingStatusValid, setSmokingStatusValid] = useState(true);
 
+    const [showPopUp, setShowPopUp] = useState(false);
+    const [recordStatus, setRecordStatus] = useState('');
+
     const numberRegrex = /^(?=.+)(?:[1-9]\d*|0)?(?:\.\d+)?$/;
     let params;
     let myCache = new cacheStore();
@@ -218,13 +221,15 @@ function AddRecord() {
                 .then((res) => res.json())
                 .then((data) => {
                     myCache.mset([
-                        { key: 'userStatus', val: data.data, ttl: 10000 }
+                        { key: 'recordStatus', val: data.data, ttl: 10000 }
                     ]);
                 });
-            let userStatus = myCache.mget(['userStatus']).userStatus;
-            console.log('User Status : ', userStatus);
+            let recordStatus = myCache.mget(['recordStatus']).recordStatus;
 
             setFiles([]);
+            setShowPopUp(true);
+            setRecordStatus(myCache.mget(['recordStatus']).recordStatus);
+            window.scrollTo(0, 0);
         }
     };
 
@@ -898,6 +903,27 @@ function AddRecord() {
                     )}
                 </form>
             </div>
+            {showPopUp ? (
+                <div className="popup">
+                    <div className="popup_inner rounded">
+                        <p>
+                            <b>{recordStatus}</b>
+                        </p>
+                        <a
+                            onClick={(e) => {
+                                setShowPopUp(false);
+                                setRecordStatus('');
+                                e.preventDefault();
+                            }}
+                            className="btn btn-danger"
+                        >
+                            Close
+                        </a>
+                    </div>
+                </div>
+            ) : (
+                <></>
+            )}
         </div>
     );
 }
