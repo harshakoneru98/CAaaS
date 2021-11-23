@@ -7,9 +7,7 @@ function ProfileView() {
         (state) => state.UserDataEmailReducer.userData ?? ''
     );
 
-    const [emailCookie, setEmailCookie, removeEmailCookie] = useCookies([
-        'email'
-    ]);
+    const [projectCookie, setProjectCookie] = useCookies(['email', 'level']);
 
     return (
         <div className="auth-wrapper">
@@ -78,7 +76,7 @@ function ProfileView() {
                             type="text"
                             className="form-control"
                             placeholder="Enter Email"
-                            value={emailCookie?.email}
+                            value={projectCookie?.email}
                             readOnly
                         />
                     </div>
