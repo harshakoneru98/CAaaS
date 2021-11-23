@@ -1,12 +1,13 @@
 import home from '../../../public/assets/images/home.jpeg';
+import Visualisation1 from './visualisation_1';
 
 function HomeView() {
     return (
-        <div class="home-container">
-            <div class="album py-5 bg-light">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-6">
+        <div className="home-container">
+            <div className="album py-5 bg-light">
+                <div className="container">
+                    <div className="row">
+                        <div className="col-md-6">
                             <p className="first-p">
                                 Medical diagnosis is a category of medical tests
                                 designed for disease or infection detection.
@@ -38,8 +39,16 @@ function HomeView() {
                                 Billion per year – <b>CDC</b>
                             </p>
                         </div>
-                        <div class="col-md-6">
+                        <div className="col-md-6">
                             <img src={home.src} />
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-md-6">
+                            <Visualisation1 name="visual1" />
+                        </div>
+                        <div className="col-md-6">
+                            <Visualisation1 name="visual2" />
                         </div>
                     </div>
                 </div>
