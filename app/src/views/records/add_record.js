@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useCookies } from 'react-cookie';
 import moment from 'moment';
+import * as cacheStore from 'node-cache';
 import { useDropzone } from 'react-dropzone';
 
 function AddRecord() {
@@ -26,10 +27,14 @@ function AddRecord() {
     const [bmiValid, setBmiValid] = useState(true);
     const [smokingStatusValid, setSmokingStatusValid] = useState(true);
 
+    const [showPopUp, setShowPopUp] = useState(false);
+    const [recordStatus, setRecordStatus] = useState('');
+
     const numberRegrex = /^(?=.+)(?:[1-9]\d*|0)?(?:\.\d+)?$/;
     let params;
+    let myCache = new cacheStore();
 
-    const [emailCookie, setEmailCookie] = useCookies(['email']);
+    const [projectCookie, setProjectCookie] = useCookies(['email', 'level']);
 
     const [files, setFiles] = useState([]);
 
@@ -152,7 +157,7 @@ function AddRecord() {
                 avg_glucose_level: avgGlucoseLevel,
                 bmi: bmi,
                 smoking_status: smokingStatus,
-                email: emailCookie.email,
+                email: projectCookie.email,
                 time_created: moment().format('MMMM Do YYYY, h:mm:ss a')
             };
             addRecord(params);
@@ -206,6 +211,8 @@ function AddRecord() {
                     'MMMM Do YYYY, h:mm:ss a'
                 )
             );
+            formData.append('level', projectCookie?.level);
+            formData.append('email', projectCookie?.email);
 
             await fetch('http://localhost:8080/api/record/create/image/', {
                 method: 'POST',
@@ -213,13 +220,16 @@ function AddRecord() {
             })
                 .then((res) => res.json())
                 .then((data) => {
-                    // myCache.mset([
-                    //     { key: 'userStatus', val: data.data, ttl: 10000 }
-                    // ]);
+                    myCache.mset([
+                        { key: 'recordStatus', val: data.data, ttl: 10000 }
+                    ]);
                 });
-            // let userStatus = myCache.mget(['userStatus']).userStatus;
+            let recordStatus = myCache.mget(['recordStatus']).recordStatus;
 
             setFiles([]);
+            setShowPopUp(true);
+            setRecordStatus(myCache.mget(['recordStatus']).recordStatus);
+            window.scrollTo(0, 0);
         }
     };
 
@@ -893,6 +903,27 @@ function AddRecord() {
                     )}
                 </form>
             </div>
+            {showPopUp ? (
+                <div className="popup">
+                    <div className="popup_inner rounded">
+                        <p>
+                            <b>{recordStatus}</b>
+                        </p>
+                        <a
+                            onClick={(e) => {
+                                setShowPopUp(false);
+                                setRecordStatus('');
+                                e.preventDefault();
+                            }}
+                            className="btn btn-danger"
+                        >
+                            Close
+                        </a>
+                    </div>
+                </div>
+            ) : (
+                <></>
+            )}
         </div>
     );
 }

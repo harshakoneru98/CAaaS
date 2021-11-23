@@ -12,7 +12,7 @@ export default function Login() {
     const [password, setPassword] = useState('');
     const [valid, setValid] = useState(true);
 
-    const [emailCookie, setEmailCookie] = useCookies(['email']);
+    const [projectCookie, setProjectCookie] = useCookies(['email', 'level']);
 
     const level = useSelector((state) => state.MainViewReducer.level ?? '');
 
@@ -48,7 +48,8 @@ export default function Login() {
 
         if (checkStatus == 'Valid') {
             setValid(true);
-            setEmailCookie('email', params.email, { path: '/' });
+            setProjectCookie('email', params.email, { path: '/' });
+            setProjectCookie('level', level, { path: '/' });
             changeRoute('/caaas/home');
         } else {
             setValid(false);

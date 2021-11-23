@@ -13,8 +13,9 @@ export default function MainHeader() {
     const [isRoute, setIsRoute] = useState('');
     const [isOpen, setIsOpen] = useState(false);
 
-    const [emailCookie, setEmailCookie, removeEmailCookie] = useCookies([
-        'email'
+    const [projectCookie, setProjectCookie, removeProjectCookie] = useCookies([
+        'email',
+        'level'
     ]);
 
     const userData = useSelector(
@@ -26,10 +27,10 @@ export default function MainHeader() {
     });
 
     useEffect(() => {
-        if (emailCookie?.email) {
-            dispatch(UserDataEmailThunk(emailCookie.email));
+        if (projectCookie?.email) {
+            dispatch(UserDataEmailThunk(projectCookie.email));
         }
-    }, [emailCookie]);
+    }, [projectCookie]);
 
     useEffect(() => {
         document.addEventListener('mousedown', handleClickOutside);
@@ -39,7 +40,8 @@ export default function MainHeader() {
     let changeRoute = (elementRoute) => {
         setIsRoute(elementRoute);
         if (elementRoute == '/') {
-            removeEmailCookie('email', { path: '/' });
+            removeProjectCookie('email', { path: '/' });
+            removeProjectCookie('level', { path: '/' });
             window.location.href = elementRoute;
         } else {
             router.push(elementRoute);
