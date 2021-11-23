@@ -29,6 +29,7 @@ function AddRecord() {
 
     const [showPopUp, setShowPopUp] = useState(false);
     const [recordStatus, setRecordStatus] = useState('');
+    const [uploadStatus, setUploadStatus] = useState(false);
 
     const numberRegrex = /^(?=.+)(?:[1-9]\d*|0)?(?:\.\d+)?$/;
     let params;
@@ -192,6 +193,7 @@ function AddRecord() {
 
     let uploadFile = async () => {
         if (files[0]) {
+            setUploadStatus(true);
             const formData = new FormData();
 
             const myNewFile = new File(
@@ -227,6 +229,7 @@ function AddRecord() {
             let recordStatus = myCache.mget(['recordStatus']).recordStatus;
 
             setFiles([]);
+            setUploadStatus(false);
             setShowPopUp(true);
             setRecordStatus(myCache.mget(['recordStatus']).recordStatus);
             window.scrollTo(0, 0);
@@ -872,7 +875,8 @@ function AddRecord() {
                                             <th>
                                                 <a
                                                     className={
-                                                        files[0]?.name
+                                                        files[0]?.name &&
+                                                        !uploadStatus
                                                             ? 'btn btn-success'
                                                             : 'btn btn-success is-diabled'
                                                     }
@@ -886,7 +890,11 @@ function AddRecord() {
                                             </th>
                                             <th>
                                                 <a
-                                                    className="btn btn-danger"
+                                                    className={
+                                                        !uploadStatus
+                                                            ? 'btn btn-danger'
+                                                            : 'btn btn-danger is-diabled'
+                                                    }
                                                     onClick={(e) => {
                                                         setFiles([]);
                                                         e.preventDefault();
