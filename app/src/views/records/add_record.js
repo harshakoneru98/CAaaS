@@ -54,6 +54,8 @@ function AddRecord() {
         setBmi('');
         setSmokingStatus('');
 
+        setFiles([]);
+
         setHyperTensionValid(true);
         setHeartDiseaseValid(true);
         setEvenMarriedValid(true);
