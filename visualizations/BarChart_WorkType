@@ -244,14 +244,14 @@ text.source {
       .attr('y', margin / 2.4)
       .attr('transform', 'rotate(-90)')
       .attr('text-anchor', 'middle')
-      .text('Love meter (%)')
+      .text('Percentage (%)')
 
     svg.append('text')
       .attr('class', 'label')
       .attr('x', width / 2 + margin)
       .attr('y', height + margin * 1.7)
       .attr('text-anchor', 'middle')
-      .text('Languages')
+      .text('Work Type')
 
     svg.append('text')
       .attr('class', 'title')
@@ -265,7 +265,6 @@ text.source {
       .attr('x', width - margin / 2)
       .attr('y', height + margin * 1.7)
       .attr('text-anchor', 'start')
-      .text('Source: Stack Overflow, 2018')
   </script>
 </body>
 </html>
