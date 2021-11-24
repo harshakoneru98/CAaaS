@@ -83,7 +83,7 @@ export default class RecordController {
                                     age: bodyParams.age,
                                     hypertension: bodyParams.hypertension,
                                     heart_disease: bodyParams.heart_disease,
-                                    even_married: bodyParams.even_married,
+                                    ever_married: bodyParams.ever_married,
                                     work_type: bodyParams.work_type,
                                     Residence_type: bodyParams.Residence_type,
                                     avg_glucose_level:
@@ -91,7 +91,8 @@ export default class RecordController {
                                     bmi: bodyParams.bmi,
                                     smoking_status: bodyParams.smoking_status,
                                     time_created: bodyParams.time_created,
-                                    score: results[0]
+                                    time_stamp: bodyParams.time_stamp,
+                                    score: Math.floor(results[0] * 100) + ' %' 
                                 }
                             };
 
@@ -182,13 +183,14 @@ export default class RecordController {
                                     Item: {
                                         PK: `GRP#${groupId}`,
                                         SK: `REC#image#${recordId}`,
-                                        name: req_params.fileName,
+                                        name: req_params.fileName.split('-')[1],
                                         size:
                                             Math.round(
                                                 (req_params.size * 10) / 1024
                                             ) / 10,
                                         lastModified: req_params.lastModified,
                                         url: url,
+                                        time_stamp: req_params.time_stamp,
                                         score: Math.floor(results[0] * 100)
                                     }
                                 };

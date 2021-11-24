@@ -1,9 +1,9 @@
 import React from 'react';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Chart as ChartJS, ArcElement, Tooltip, Title, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
-ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
+ChartJS.register(ArcElement, Tooltip, Legend, Title, ChartDataLabels);
 
 export const options = {
     plugins: {
@@ -20,12 +20,20 @@ export const options = {
                 }
             },
             color: 'black'
+        },
+        legend: {
+            position: 'bottom'
+        },
+        title: {
+            display: true,
+            text: 'Smoking Status of Stroke Patients'
         }
     }
 };
 
 export const data = {
-    labels: ['Smokers', 'Former Smokers', 'Never Smoked', 'Unknown'],
+    labels: ['Smokes', 'Formerly Smoked', 'Never Smoked', 'Prefer not to say'],
+
     datasets: [
         {
             label: '# of Votes',

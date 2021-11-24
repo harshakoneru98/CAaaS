@@ -168,6 +168,7 @@ function AddRecord() {
                 smoking_status: smokingStatus,
                 email: projectCookie.email,
                 time_created: moment().format('MMMM Do YYYY, h:mm:ss a'),
+                time_stamp: moment().valueOf(),
                 fileName: moment().valueOf() + '-table.csv'
             };
             addRecord(params);
@@ -222,6 +223,7 @@ function AddRecord() {
                     'MMMM Do YYYY, h:mm:ss a'
                 )
             );
+            formData.append('time_stamp', moment().valueOf());
             formData.append('level', projectCookie?.level);
             formData.append('email', projectCookie?.email);
 
