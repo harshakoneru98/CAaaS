@@ -57,4 +57,53 @@ export default class GroupController {
             });
         }
     };
+
+    public get_groupData_by_email = async (req: Request, res: Response) => {
+        let email = req.body.email;
+        let type = req.body.type;
+
+        let myCache = new store();
+
+        try {
+
+            await fetch('http://localhost:8080/api/group/groupId/' + email)
+                .then((res) => res.json())
+                .then((data) => {
+                    myCache.mset([
+                        { key: 'groupId', val: data.data, ttl: 10000 }
+                    ]);
+                });
+
+            let groupId = myCache.mget(['groupId']).groupId;
+
+            var params = {
+                TableName: config.DATABASE_NAME,
+                KeyConditionExpression: "#PK = :PK and begins_with(#SK, :SK)",
+                ExpressionAttributeNames: {"#PK": "PK", "#SK": "SK"},
+                ExpressionAttributeValues: {
+                    ":PK": "GRP#" + groupId,
+                    ":SK": "REC#" + type + '#'
+                }
+            };
+
+            var documentClient = new AWS.DynamoDB.DocumentClient();
+
+            documentClient.query(params, function (err, data) {
+                if (err) console.log(err);
+                else {
+                    res.send({
+                        status: 200,
+                        data: data?.Items,
+                        message: 'OK'
+                    });
+                }
+            });
+        } catch (err) {
+            res.status(500).json({
+                message: err
+            });
+        }
+    };
+
+    
 }

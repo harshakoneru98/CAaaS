@@ -15,6 +15,7 @@
     "next": "11.1.2",
     "node-cache": "^5.1.0",
     "react": "17.0.2",
+    "react-bootstrap-table-next": "^4.0.3",
     "react-chartjs-2": "^4.0.0",
     "react-cookie": "^4.1.1",
     "react-dom": "17.0.2",
