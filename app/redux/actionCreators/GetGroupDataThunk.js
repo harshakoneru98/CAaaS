@@ -15,7 +15,7 @@ const UserDataEmailThunk = (email, type) => {
         })
             .then((res) => res.json())
             .then((data) => {
-                dispatch(getGroupData(data.data));
+                dispatch(getGroupData(data));
             });
     };
 };

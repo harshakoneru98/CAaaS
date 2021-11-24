@@ -9,6 +9,8 @@ import App from 'next/app';
 import { CookiesProvider } from 'react-cookie';
 import withReduxStore from '../src/store/lib/with-redux-store';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'react-bootstrap-table-next/dist/react-bootstrap-table2.css';
+import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
 import '../src/styles/main.css';
 import '../src/styles/auth.css';
 import '../src/styles/app.css';
