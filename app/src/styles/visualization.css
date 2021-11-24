@@ -1,0 +1,5 @@
+.first_visualization canvas {
+    width: 80% !important;
+    margin: auto;
+    position: relative;
+}
