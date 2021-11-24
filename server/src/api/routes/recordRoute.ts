@@ -31,6 +31,7 @@ let upload = multer({
     storage: multerS3({
         s3: s3,
         bucket: config.IMAGE_BUCKET,
+        acl: 'public-read',
         key: function (req, file, cb) {
             cb(null, file.originalname);
         }

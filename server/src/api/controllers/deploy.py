@@ -8,6 +8,7 @@ import urllib.request
 
 
 def dataloader_live(path):
+    path = path.replace(" ", "%20")
     urllib.request.urlretrieve(path, fileName)
     img = cv2.imread(fileName)
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
