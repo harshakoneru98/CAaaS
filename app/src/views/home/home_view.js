@@ -1,6 +1,8 @@
 import home from '../../../public/assets/images/home.jpeg';
 import Visualization1 from './visualization_1';
 import Visualization2 from './visualization_2';
+import Visualization3 from './visualization_3';
+import Visualization4 from './visualization_4';
 
 function HomeView() {
     return (
@@ -59,6 +61,24 @@ function HomeView() {
                         </div>
                         <div className="col-md-6">
                             <Visualization2 />
+                        </div>
+                    </div>
+
+                    <div className="row">
+                        <div className="col-md-6 visualization">
+                            <Visualization3 />
+                        </div>
+                        <div className="col-md-6">
+                            <p>explain</p>
+                        </div>
+                    </div>
+
+                    <div className="row">
+                        <div className="col-md-6">
+                            <p>explain</p>
+                        </div>
+                        <div className="col-md-6">
+                            <Visualization4 />
                         </div>
                     </div>
                 </div>
