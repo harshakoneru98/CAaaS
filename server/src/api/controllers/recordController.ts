@@ -92,7 +92,7 @@ export default class RecordController {
                                     smoking_status: bodyParams.smoking_status,
                                     time_created: bodyParams.time_created,
                                     time_stamp: bodyParams.time_stamp,
-                                    score: Math.floor(results[0] * 100) + ' %' 
+                                    score: Math.floor(results[0] * 100) + ' %'
                                 }
                             };
 
@@ -162,7 +162,13 @@ export default class RecordController {
                     if (err) {
                         console.log(err, err.stack); // an error occurred
                     } else {
-                        let url = s3.getSignedUrl('getObject', params);
+                        let url =
+                            'https://' +
+                            config.IMAGE_BUCKET +
+                            '.s3.' +
+                            config.AWS_REGION +
+                            '.amazonaws.com/' +
+                            req_params.fileName;
 
                         let options = {
                             pythonPath: config.Python_Path,
@@ -191,7 +197,7 @@ export default class RecordController {
                                         lastModified: req_params.lastModified,
                                         url: url,
                                         time_stamp: req_params.time_stamp,
-                                        score: Math.floor(results[0] * 100)
+                                        score: Math.floor(results[0] * 100) + ' %'
                                     }
                                 };
 
