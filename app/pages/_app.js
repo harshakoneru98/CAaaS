@@ -15,6 +15,7 @@ import '../src/styles/app.css';
 import '../src/styles/home.css';
 import '../src/styles/popup.css';
 import '../src/styles/fileUpload.css';
+import '../src/styles/checkScore.css';
 
 function MyApp({ Component, pageProps, store }) {
     return (
