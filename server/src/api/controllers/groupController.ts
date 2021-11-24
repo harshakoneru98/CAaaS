@@ -30,7 +30,7 @@ export default class GroupController {
             let userId = myCache.mget(['userId']).userId;
 
             var params = {
-                TableName: 'user_data',
+                TableName: config.DATABASE_NAME,
                 KeyConditionExpression: "#PK = :PK and begins_with(#SK, :SK)",
                 ExpressionAttributeNames: {"#PK": "PK", "#SK": "SK"},
                 ExpressionAttributeValues: {
