@@ -5,13 +5,15 @@ import * as cacheStore from 'node-cache';
 import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit';
-import GetGroupDataThunk from '../../../redux/actionCreators/GetGroupDataThunk';
+import GetGroupDataTableThunk from '../../../redux/actionCreators/GetGroupDataTableThunk';
+import GetGroupDataImageThunk from '../../../redux/actionCreators/GetGroupDataImageThunk';
 
 function CheckScoreView() {
     const dispatch = useDispatch();
     let myCache = new cacheStore();
     let columns = [];
-    let groupData = [];
+    let groupTableData = [];
+    let groupImageData = [];
     let defaultSorted = [];
     let pagination = paginationFactory({
         sizePerPage: 10,
@@ -42,9 +44,17 @@ function CheckScoreView() {
 
     const [projectCookie, setProjectCookie] = useCookies(['email', 'level']);
 
-    groupData = useSelector((state) => state.GroupDataReducer.groupData ?? '');
+    groupTableData = useSelector(
+        (state) => state.GroupDataTableReducer.groupTableData ?? ''
+    );
 
-    console.log('Data : ', groupData);
+    groupImageData = useSelector(
+        (state) => state.GroupDataImageReducer.groupImageData ?? ''
+    );
+
+    console.log('Table Data : ', groupTableData);
+
+    console.log('Image Data : ', groupImageData);
 
     let linkFollow = (cell, row) => {
         return (
@@ -70,7 +80,7 @@ function CheckScoreView() {
         );
     };
 
-    if (isSelection == 'table' && groupData?.data?.length > 0) {
+    if (isSelection == 'table' && groupTableData?.data?.length > 0) {
         columns = [
             { dataField: 'time_created', text: 'Record Posted', sort: true },
             { dataField: 'hypertension', text: 'Hypertension', sort: true },
@@ -112,7 +122,7 @@ function CheckScoreView() {
                 order: 'desc'
             }
         ];
-    } else if (isSelection == 'image' && groupData?.data?.length > 0) {
+    } else if (isSelection == 'image' && groupImageData?.data?.length > 0) {
         columns = [
             { dataField: 'lastModified', text: 'Record Posted', sort: true },
             { dataField: 'name', text: 'File Name', sort: true },
@@ -141,9 +151,11 @@ function CheckScoreView() {
     }
 
     useEffect(() => {
-        groupData = [];
-        console.log(groupData);
-        dispatch(GetGroupDataThunk(projectCookie.email, isSelection));
+        if (isSelection == 'table') {
+            dispatch(GetGroupDataTableThunk(projectCookie.email));
+        } else if (isSelection == 'image') {
+            dispatch(GetGroupDataImageThunk(projectCookie.email));
+        }
     }, [isSelection]);
 
     let changeSelection = (status) => {
@@ -191,11 +203,11 @@ function CheckScoreView() {
                 </tbody>
             </table>
 
-            {groupData?.data?.length > 0 && isSelection == 'table' && (
+            {groupTableData?.data?.length > 0 && isSelection == 'table' && (
                 <ToolkitProvider
                     bootstrap4
                     keyField="SK"
-                    data={groupData?.data}
+                    data={groupTableData?.data}
                     columns={columns}
                     search
                     exportCSV
@@ -214,7 +226,7 @@ function CheckScoreView() {
                             <BootstrapTable
                                 bootstrap4
                                 keyField="SK"
-                                data={groupData?.data}
+                                data={groupTableData?.data}
                                 columns={columns}
                                 defaultSorted={defaultSorted}
                                 pagination={pagination}
@@ -229,11 +241,11 @@ function CheckScoreView() {
                 </ToolkitProvider>
             )}
 
-            {groupData?.data?.length > 0 && isSelection == 'image' && (
+            {groupImageData?.data?.length > 0 && isSelection == 'image' && (
                 <ToolkitProvider
                     bootstrap4
                     keyField="SK"
-                    data={groupData?.data}
+                    data={groupImageData?.data}
                     columns={columns}
                     search
                 >
@@ -249,7 +261,7 @@ function CheckScoreView() {
                             <BootstrapTable
                                 bootstrap4
                                 keyField="SK"
-                                data={groupData?.data}
+                                data={groupImageData?.data}
                                 columns={columns}
                                 defaultSorted={defaultSorted}
                                 pagination={pagination}

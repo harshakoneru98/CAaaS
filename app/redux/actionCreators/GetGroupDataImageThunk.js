@@ -1,9 +1,9 @@
-import { getGroupData } from './GetGroupData';
+import { getGroupDataImage } from './GetGroupDataImage';
 
-const UserDataEmailThunk = (email, type) => {
+const GetGroupDataImageThunk = (email) => {
     let params = {
         email: email,
-        type: type
+        type: 'image'
     };
     return (dispatch) => {
         fetch('/api/getScoreData', {
@@ -15,9 +15,9 @@ const UserDataEmailThunk = (email, type) => {
         })
             .then((res) => res.json())
             .then((data) => {
-                dispatch(getGroupData(data));
+                dispatch(getGroupDataImage(data));
             });
     };
 };
 
-export default UserDataEmailThunk;
+export default GetGroupDataImageThunk;

@@ -2,19 +2,19 @@ import React from 'react';
 import { types } from '../actionCreators/Types';
 
 const initialState = {
-    groupData: ''
+    groupTableData: ''
 };
 
-const GroupDataReducer = (state = initialState, action) => {
+const GroupDataTableReducer = (state = initialState, action) => {
     switch (action.type) {
-        case types.GET_GROUP_DATA:
+        case types.GET_GROUP_DATA_TABLE:
             return {
                 ...state,
-                groupData: action.payload
+                groupTableData: action.payload
             };
         default:
             return state;
     }
 };
 
-export default GroupDataReducer;
+export default GroupDataTableReducer;
