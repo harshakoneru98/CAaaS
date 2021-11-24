@@ -1,5 +1,5 @@
 import home from '../../../public/assets/images/home.jpeg';
-import Visualisation1 from './visualisation_1';
+import Visualisation2 from './visualisation_2';
 
 function HomeView() {
     return (
@@ -45,10 +45,10 @@ function HomeView() {
                     </div>
                     <div className="row">
                         <div className="col-md-6">
-                            <Visualisation1 name="visual1" />
+                            {/* <Visualisation1 name="visual1" /> */}
                         </div>
                         <div className="col-md-6">
-                            <Visualisation1 name="visual2" />
+                            <Visualisation2 />
                         </div>
                     </div>
                 </div>
