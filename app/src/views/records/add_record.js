@@ -12,7 +12,7 @@ function AddRecord() {
 
     const [hyperTension, setHyperTension] = useState('');
     const [heartDisease, setHeartDisease] = useState('');
-    const [evenMarried, setEvenMarried] = useState('');
+    const [everMarried, setEverMarried] = useState('');
     const [workType, setWorkType] = useState('');
     const [residenceType, setResidenceType] = useState('');
     const [avgGlucoseLevel, setAvgGlucoseLevel] = useState('');
@@ -21,7 +21,7 @@ function AddRecord() {
 
     const [hyperTensionValid, setHyperTensionValid] = useState(true);
     const [heartDiseaseValid, setHeartDiseaseValid] = useState(true);
-    const [evenMarriedValid, setEvenMarriedValid] = useState(true);
+    const [everMarriedValid, setEverMarriedValid] = useState(true);
     const [workTypeValid, setWorkTypeValid] = useState(true);
     const [residenceTypeValid, setResidenceTypeValid] = useState(true);
     const [avgGlucoseLevelValid, setAvgGlucoseLevelValid] = useState(true);
@@ -47,7 +47,7 @@ function AddRecord() {
     useEffect(() => {
         setHyperTension('');
         setHeartDisease('');
-        setEvenMarried('');
+        setEverMarried('');
         setWorkType('');
         setResidenceType('');
         setAvgGlucoseLevel('');
@@ -58,7 +58,7 @@ function AddRecord() {
 
         setHyperTensionValid(true);
         setHeartDiseaseValid(true);
-        setEvenMarriedValid(true);
+        setEverMarriedValid(true);
         setWorkTypeValid(true);
         setResidenceTypeValid(true);
         setAvgGlucoseLevelValid(true);
@@ -71,8 +71,8 @@ function AddRecord() {
     };
 
     let addRecord = async (params) => {
+        setUploadStatus(true);
         setIsStatus(!isStatus);
-        console.log('Params : ', params);
         await fetch('/api/postTabularRecord', {
             method: 'POST',
             body: JSON.stringify(params),
@@ -82,11 +82,16 @@ function AddRecord() {
         })
             .then((res) => res.json())
             .then((data) => {
-                // myCache.mset([
-                //     { key: 'userStatus', val: data.data, ttl: 10000 }
-                // ]);
+                myCache.mset([
+                    { key: 'recordStatus', val: data.data, ttl: 10000 }
+                ]);
             });
-        // let userStatus = myCache.mget(['userStatus']).userStatus;
+        let recordStatus = myCache.mget(['recordStatus']).recordStatus;
+
+        setUploadStatus(false);
+        setShowPopUp(true);
+        setRecordStatus(myCache.mget(['recordStatus']).recordStatus);
+        window.scrollTo(0, 0);
     };
 
     let addRecordSubmit = () => {
@@ -102,10 +107,10 @@ function AddRecord() {
             setHeartDiseaseValid(false);
         }
 
-        if (evenMarried != '') {
-            setEvenMarriedValid(true);
+        if (everMarried != '') {
+            setEverMarriedValid(true);
         } else {
-            setEvenMarriedValid(false);
+            setEverMarriedValid(false);
         }
 
         if (workType != '') {
@@ -141,7 +146,7 @@ function AddRecord() {
         if (
             hyperTension != '' &&
             heartDisease != '' &&
-            evenMarried != '' &&
+            everMarried != '' &&
             workType != '' &&
             residenceType != '' &&
             numberRegrex.test(avgGlucoseLevel) &&
@@ -155,14 +160,15 @@ function AddRecord() {
                     .toString(),
                 hypertension: hyperTension,
                 heart_disease: heartDisease,
-                even_married: evenMarried,
+                ever_married: everMarried,
                 work_type: workType,
                 Residence_type: residenceType,
                 avg_glucose_level: avgGlucoseLevel,
                 bmi: bmi,
                 smoking_status: smokingStatus,
                 email: projectCookie.email,
-                time_created: moment().format('MMMM Do YYYY, h:mm:ss a')
+                time_created: moment().format('MMMM Do YYYY, h:mm:ss a'),
+                fileName: moment().valueOf() + '-table.csv'
             };
             addRecord(params);
         }
@@ -283,7 +289,15 @@ function AddRecord() {
                     </table>
 
                     {isSelection == 'table' && (
-                        <div>
+                        <div className={uploadStatus ? 'images' : ''}>
+                            <img
+                                src={loader.src}
+                                alt="preview"
+                                className="loader-image"
+                                style={{
+                                    display: uploadStatus ? 'block' : 'none'
+                                }}
+                            />
                             <div
                                 className={
                                     !hyperTensionValid
@@ -408,7 +422,7 @@ function AddRecord() {
 
                             <div
                                 className={
-                                    !evenMarriedValid
+                                    !everMarriedValid
                                         ? 'form-group form-error'
                                         : 'form-group'
                                 }
@@ -420,19 +434,19 @@ function AddRecord() {
                                     <input
                                         className="form-check-input"
                                         type="radio"
-                                        name="evenMarried"
+                                        name="everMarried"
                                         onChange={(e) => {
-                                            setEvenMarried(e.target.value);
+                                            setEverMarried(e.target.value);
                                         }}
-                                        id="yesEvenMarried"
+                                        id="yesEverMarried"
                                         value="Yes"
                                         checked={
-                                            evenMarried == 'Yes' ? true : false
+                                            everMarried == 'Yes' ? true : false
                                         }
                                     />
                                     <label
                                         className="form-check-label"
-                                        htmlFor="yesEvenMarried"
+                                        htmlFor="yesEverMarried"
                                     >
                                         Yes
                                     </label>
@@ -442,25 +456,25 @@ function AddRecord() {
                                     <input
                                         className="form-check-input"
                                         type="radio"
-                                        name="evenMarried"
+                                        name="everMarried"
                                         onChange={(e) => {
-                                            setEvenMarried(e.target.value);
+                                            setEverMarried(e.target.value);
                                         }}
-                                        id="noEvenMarried"
+                                        id="noEverMarried"
                                         value="No"
                                         checked={
-                                            evenMarried == 'No' ? true : false
+                                            everMarried == 'No' ? true : false
                                         }
                                     />
                                     <label
                                         className="form-check-label"
-                                        htmlFor="noEvenMarried"
+                                        htmlFor="noEverMarried"
                                     >
                                         No
                                     </label>
                                 </div>
 
-                                {!evenMarriedValid && (
+                                {!everMarriedValid && (
                                     <label className="error">
                                         Select atleast one of the above options
                                     </label>

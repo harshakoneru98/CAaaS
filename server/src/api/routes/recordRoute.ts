@@ -30,7 +30,7 @@ var s3 = new AWS.S3();
 let upload = multer({
     storage: multerS3({
         s3: s3,
-        bucket: 'caaas-image',
+        bucket: config.IMAGE_BUCKET,
         key: function (req, file, cb) {
             cb(null, file.originalname);
         }

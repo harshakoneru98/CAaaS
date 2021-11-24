@@ -49,7 +49,7 @@ export default class UserController {
                 const groupId = uuid();
 
                 let params1 = {
-                    TableName: 'user_data',
+                    TableName: config.DATABASE_NAME,
                     Item: {
                         PK: `USR#${userId}`,
                         SK: `#METADATA#${userId}`,
@@ -66,7 +66,7 @@ export default class UserController {
                 };
 
                 let params2 = {
-                    TableName: 'user_data',
+                    TableName: config.DATABASE_NAME,
                     Item: {
                         PK: `AUTH#${params.email}`,
                         SK: `#METADATA#${params.email}`,
@@ -77,7 +77,7 @@ export default class UserController {
                 };
 
                 let params3 = {
-                    TableName: 'user_data',
+                    TableName: config.DATABASE_NAME,
                     Item: {
                         PK: `USR#${userId}`,
                         SK: `GRP#${groupType}#${groupId}`,
@@ -116,7 +116,7 @@ export default class UserController {
 
         try {
             var params = {
-                TableName: 'user_data',
+                TableName: config.DATABASE_NAME,
                 Key: {
                     PK: 'AUTH#' + email,
                     SK: '#METADATA#' + email
@@ -163,7 +163,7 @@ export default class UserController {
             let userId = myCache.mget(['userId']).userId;
 
             var params = {
-                TableName: 'user_data',
+                TableName: config.DATABASE_NAME,
                 Key: {
                     PK: 'USR#' + userId,
                     SK: '#METADATA#' + userId

@@ -16,7 +16,7 @@ export default class AuthController {
         let bodyParams = req.body;
         try {
             var params = {
-                TableName: 'user_data',
+                TableName: config.DATABASE_NAME,
                 Key: {
                     PK: 'AUTH#' + bodyParams.email,
                     SK: '#METADATA#' + bodyParams.email

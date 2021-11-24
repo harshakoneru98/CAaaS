@@ -17,12 +17,13 @@ export default class RecordController {
     // Adding Tabular Record
     public add_tabular_record = async (req: Request, res: Response) => {
         let bodyParams = req.body;
+
         let fields = [
             'gender',
             'age',
             'hypertension',
             'heart_disease',
-            'even_married',
+            'ever_married',
             'work_type',
             'Residence_type',
             'avg_glucose_level',
@@ -30,25 +31,88 @@ export default class RecordController {
             'smoking_status'
         ];
         let opts = { fields };
-
+        let myCache = new store();
         var s3 = new AWS.S3();
+        const recordId = uuid();
 
         try {
-            console.log(bodyParams);
             const csv = parse(bodyParams, opts);
-            console.log(csv);
             var base64data = Buffer.from(csv, 'binary');
+            let fileName = bodyParams.fileName;
+
+            await fetch(
+                'http://localhost:8080/api/group/groupId/' + bodyParams.email
+            )
+                .then((res) => res.json())
+                .then((data) => {
+                    myCache.mset([
+                        { key: 'groupId', val: data.data, ttl: 10000 }
+                    ]);
+                });
+
+            let groupId = myCache.mget(['groupId']).groupId;
 
             var params = {
                 Body: base64data,
-                Bucket: 'caaas-tabular',
-                Key: bodyParams.email + '$sample.csv'
+                Bucket: config.TABLE_BUCKET,
+                Key: fileName
             };
-            s3.putObject(params, function (err, data) {
+            s3.putObject(params, async function (err, data) {
                 if (err) {
                     console.log(err, err.stack);
                 } else {
-                    console.log(data);
+                    let options = {
+                        pythonPath: config.Python_Path,
+                        scriptPath: 'src/api/controllers',
+                        args: [fileName]
+                    };
+
+                    await PythonShell.run(
+                        'deployTable.py',
+                        options,
+                        async function (err, results) {
+                            if (err) {
+                                throw err;
+                            }
+                            let params2 = {
+                                TableName: config.DATABASE_NAME,
+                                Item: {
+                                    PK: `GRP#${groupId}`,
+                                    SK: `REC#table#${recordId}`,
+                                    gender: bodyParams.gender,
+                                    age: bodyParams.age,
+                                    hypertension: bodyParams.hypertension,
+                                    heart_disease: bodyParams.heart_disease,
+                                    even_married: bodyParams.even_married,
+                                    work_type: bodyParams.work_type,
+                                    Residence_type: bodyParams.Residence_type,
+                                    avg_glucose_level:
+                                        bodyParams.avg_glucose_level,
+                                    bmi: bodyParams.bmi,
+                                    smoking_status: bodyParams.smoking_status,
+                                    time_created: bodyParams.time_created,
+                                    score: results[0]
+                                }
+                            };
+
+                            var documentClient =
+                                new AWS.DynamoDB.DocumentClient();
+
+                            await documentClient.put(
+                                params2,
+                                function (err, data) {
+                                    if (err) console.log(err);
+                                    else {
+                                        res.send({
+                                            status: 200,
+                                            data: 'Created Record Successfully. Please find your risk score in Check Scores section',
+                                            message: 'OK'
+                                        });
+                                    }
+                                }
+                            );
+                        }
+                    );
                 }
             });
         } catch (err) {
@@ -86,7 +150,7 @@ export default class RecordController {
             let groupId = myCache.mget(['groupId']).groupId;
 
             var params = {
-                Bucket: 'caaas-image',
+                Bucket: config.IMAGE_BUCKET,
                 Key: req_params.fileName
             };
 
@@ -114,7 +178,7 @@ export default class RecordController {
                                 }
 
                                 let params1 = {
-                                    TableName: 'user_data',
+                                    TableName: config.DATABASE_NAME,
                                     Item: {
                                         PK: `GRP#${groupId}`,
                                         SK: `REC#image#${recordId}`,
@@ -136,7 +200,7 @@ export default class RecordController {
                                     params1,
                                     function (err, data) {
                                         if (err) console.log(err);
-                                        else{
+                                        else {
                                             res.send({
                                                 status: 200,
                                                 data: 'Created Record Successfully. Please find your risk score in Check Scores section',
