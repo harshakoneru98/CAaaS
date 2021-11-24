@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 import MainViewReducer from './Reducers/MainReducer';
+import GroupDataReducer from './Reducers/GroupDataReducer';
 import UserDataEmailReducer from './Reducers/UserDataEmailReducer';
 
 /**
@@ -10,7 +11,8 @@ import UserDataEmailReducer from './Reducers/UserDataEmailReducer';
 
 const ReduxReducer = combineReducers({
     MainViewReducer,
-    UserDataEmailReducer
+    UserDataEmailReducer,
+    GroupDataReducer
 });
 
 export default ReduxReducer;
