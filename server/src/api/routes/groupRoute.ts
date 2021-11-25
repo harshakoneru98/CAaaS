@@ -13,7 +13,7 @@ const Controller = new GroupController()
 
 // Getting trusted ticket from tableau server
 router.get('/groupId/:email', Controller.get_groupId_by_email)
-
+router.get('/groupName/:name', Controller.get_group_by_name)
 router.post('/data/', Controller.get_groupData_by_email)
 
 export default router;

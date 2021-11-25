@@ -105,5 +105,40 @@ export default class GroupController {
         }
     };
 
+    public get_group_by_name = async (req: Request, res: Response) => {
+        let name = req.params.name;
+
+        console.log('Name : ', name)
+
+        try {
+            var params = {
+                TableName: 'user_data',
+                IndexName: 'Group-By-Name',
+                KeyConditionExpression: '#PK = :PK',
+                ExpressionAttributeNames: { '#PK': 'name' },
+                ExpressionAttributeValues: {
+                    ':PK': name
+                }
+            };
+
+            var documentClient = new AWS.DynamoDB.DocumentClient();
+
+            documentClient.query(params, function (err, data) {
+                if (err) console.log(err);
+                else {
+                    res.send({
+                        status: 200,
+                        data: data.Items,
+                        message: 'OK'
+                    });
+                }
+            });
+        } catch (err) {
+            res.status(500).json({
+                message: err
+            });
+        }
+    };
+
     
 }

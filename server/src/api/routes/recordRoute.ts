@@ -40,7 +40,6 @@ let upload = multer({
 
 // Getting trusted ticket from tableau server
 router.post('/create/tabular/', Controller.add_tabular_record)
-
 router.post('/create/image/', upload.single("file"), Controller.add_image_record)
 
 export default router;

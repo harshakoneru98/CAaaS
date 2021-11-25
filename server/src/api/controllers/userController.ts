@@ -18,15 +18,41 @@ export default class UserController {
     public create_user = async (req: Request, res: Response) => {
         let params = req.body;
         let myCache = new store();
+        let groupId;
 
         let groupType = '';
-        if (params.organisation == 'self') {
-            groupType = 'self';
-        } else {
-            groupType = 'org';
-        }
 
         try {
+            if (params.organisation == 'self') {
+                groupType = 'self';
+                groupId = uuid();
+            } else {
+                groupType = 'org';
+                await fetch(
+                    'http://localhost:8080/api/group/groupName/' +
+                        params.organisation
+                )
+                    .then((res) => res.json())
+                    .then((data) => {
+                        let orgId = '';
+                        if (data.data.length > 0) {
+                            orgId = data.data[0]['SK'].split('#')[2];
+                        } else {
+                            orgId = '';
+                        }
+                        myCache.mset([
+                            { key: 'groupId', val: orgId, ttl: 10000 }
+                        ]);
+                    });
+
+                let groupExistsId = myCache.mget(['groupId']).groupId;
+
+                if (groupExistsId != '') {
+                    groupId = groupExistsId;
+                } else {
+                    groupId = uuid();
+                }
+            }
             await fetch('http://localhost:8080/api/user/userId/' + params.email)
                 .then((res) => res.json())
                 .then((data) => {
@@ -46,7 +72,6 @@ export default class UserController {
             } else {
                 // Create unique userid
                 const userId = uuid();
-                const groupId = uuid();
 
                 let params1 = {
                     TableName: config.DATABASE_NAME,
