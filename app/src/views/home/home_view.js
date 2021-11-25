@@ -47,7 +47,7 @@ function HomeView() {
                         </div>
                     </div>
                     <div className="row">
-                        <div className="col-md-6 visualization">
+                        <div className="col-md-6 visualization1">
                             <Visualization1 />
                         </div>
                         <div className="col-md-6">
@@ -59,13 +59,13 @@ function HomeView() {
                         <div className="col-md-6">
                             <p>explain</p>
                         </div>
-                        <div className="col-md-6">
+                        <div className="col-md-6 visualization2">
                             <Visualization2 />
                         </div>
                     </div>
 
                     <div className="row">
-                        <div className="col-md-6 visualization">
+                        <div className="col-md-6 visualization3">
                             <Visualization3 />
                         </div>
                         <div className="col-md-6">
@@ -77,7 +77,7 @@ function HomeView() {
                         <div className="col-md-6">
                             <p>explain</p>
                         </div>
-                        <div className="col-md-6">
+                        <div className="col-md-6 visualization4">
                             <Visualization4 />
                         </div>
                     </div>

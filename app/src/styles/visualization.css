@@ -1,4 +1,4 @@
-.visualization canvas {
+.visualization1 canvas {
     width: 80% !important;
     margin: auto;
     position: relative;
@@ -21,6 +21,16 @@
     float: right;
     margin-bottom: 15px;
     margin-right: 10px;
+}
+
+.visualization3 canvas {
+    width: 100% !important;
+    height: 40vh !important;
+}
+
+.visualization4 canvas {
+    width: 100% !important;
+    height: 40vh !important;
 }
 
 
