@@ -10,6 +10,7 @@ import {
     Legend
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 ChartJS.register(
     CategoryScale,
@@ -18,7 +19,8 @@ ChartJS.register(
     LineElement,
     Title,
     Tooltip,
-    Legend
+    Legend,
+    ChartDataLabels
 );
 
 export const options = {
@@ -32,6 +34,9 @@ export const options = {
         }
     },
     plugins: {
+        datalabels: {
+            display: false
+        },
         legend: {
             position: 'bottom'
         },
