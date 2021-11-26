@@ -10,6 +10,11 @@ function AddRecord() {
     const [isSelection, setIsSelection] = useState('table');
     const [isStatus, setIsStatus] = useState(true);
 
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [dob, setDob] = useState('');
+    const [gender, setGender] = useState('');
+
     const [hyperTension, setHyperTension] = useState('');
     const [heartDisease, setHeartDisease] = useState('');
     const [everMarried, setEverMarried] = useState('');
@@ -18,6 +23,11 @@ function AddRecord() {
     const [avgGlucoseLevel, setAvgGlucoseLevel] = useState('');
     const [bmi, setBmi] = useState('');
     const [smokingStatus, setSmokingStatus] = useState('');
+
+    const [firstNameValid, setFirstNameValid] = useState(true);
+    const [lastNameValid, setLastNameValid] = useState(true);
+    const [dobValid, setDobValid] = useState(true);
+    const [genderValid, setGenderValid] = useState(true);
 
     const [hyperTensionValid, setHyperTensionValid] = useState(true);
     const [heartDiseaseValid, setHeartDiseaseValid] = useState(true);
@@ -33,6 +43,7 @@ function AddRecord() {
     const [uploadStatus, setUploadStatus] = useState(false);
 
     const numberRegrex = /^(?=.+)(?:[1-9]\d*|0)?(?:\.\d+)?$/;
+    const nameRegrex = /[A-Za-z]/;
     let params;
     let myCache = new cacheStore();
 
@@ -54,7 +65,17 @@ function AddRecord() {
         setBmi('');
         setSmokingStatus('');
 
+        setFirstName('');
+        setLastName('');
+        setDob('');
+        setGender('');
+
         setFiles([]);
+
+        setFirstNameValid(true);
+        setLastNameValid(true);
+        setDobValid(true);
+        setGenderValid(true);
 
         setHyperTensionValid(true);
         setHeartDiseaseValid(true);
@@ -95,6 +116,32 @@ function AddRecord() {
     };
 
     let addRecordSubmit = () => {
+        if (projectCookie.level == 'organisation') {
+            if (nameRegrex.test(firstName)) {
+                setFirstNameValid(true);
+            } else {
+                setFirstNameValid(false);
+            }
+
+            if (nameRegrex.test(lastName)) {
+                setLastNameValid(true);
+            } else {
+                setLastNameValid(false);
+            }
+
+            if (dob != '') {
+                setDobValid(true);
+            } else {
+                setDobValid(false);
+            }
+
+            if (gender != '') {
+                setGenderValid(true);
+            } else {
+                setGenderValid(false);
+            }
+        }
+
         if (hyperTension != '') {
             setHyperTensionValid(true);
         } else {
@@ -151,7 +198,8 @@ function AddRecord() {
             residenceType != '' &&
             numberRegrex.test(avgGlucoseLevel) &&
             numberRegrex.test(bmi) &&
-            smokingStatus != ''
+            smokingStatus != '' &&
+            projectCookie.level != 'organisation'
         ) {
             params = {
                 gender: userData?.gender,
@@ -169,7 +217,48 @@ function AddRecord() {
                 email: projectCookie.email,
                 time_created: moment().format('MMMM Do YYYY, h:mm:ss a'),
                 time_stamp: moment().valueOf(),
-                fileName: moment().valueOf() + '-table.csv'
+                fileName: moment().valueOf() + '-table.csv',
+                level: projectCookie.level
+            };
+            addRecord(params);
+        }
+
+        if (
+            nameRegrex.test(firstName) &&
+            nameRegrex.test(lastName) &&
+            dob != '' &&
+            gender != '' &&
+            hyperTension != '' &&
+            heartDisease != '' &&
+            everMarried != '' &&
+            workType != '' &&
+            residenceType != '' &&
+            numberRegrex.test(avgGlucoseLevel) &&
+            numberRegrex.test(bmi) &&
+            smokingStatus != '' &&
+            projectCookie.level == 'organisation'
+        ) {
+            params = {
+                firstName: firstName,
+                lastName: lastName,
+                dob: dob,
+                gender: gender,
+                age: moment()
+                    .diff(moment(dob, 'YYYY-MM-DD'), 'years')
+                    .toString(),
+                hypertension: hyperTension,
+                heart_disease: heartDisease,
+                ever_married: everMarried,
+                work_type: workType,
+                Residence_type: residenceType,
+                avg_glucose_level: avgGlucoseLevel,
+                bmi: bmi,
+                smoking_status: smokingStatus,
+                email: projectCookie.email,
+                time_created: moment().format('MMMM Do YYYY, h:mm:ss a'),
+                time_stamp: moment().valueOf(),
+                fileName: moment().valueOf() + '-table.csv',
+                level: projectCookie.level
             };
             addRecord(params);
         }
@@ -300,6 +389,183 @@ function AddRecord() {
                                     display: uploadStatus ? 'block' : 'none'
                                 }}
                             />
+
+                            {projectCookie.level == 'organisation' && (
+                                <div
+                                    className={
+                                        !firstNameValid
+                                            ? 'form-group form-error'
+                                            : 'form-group'
+                                    }
+                                >
+                                    <label>First name</label>
+                                    <span> *</span>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="First name"
+                                        onChange={(e) => {
+                                            setFirstName(e.target.value);
+                                        }}
+                                        value={firstName}
+                                    />
+                                    {!firstNameValid && (
+                                        <label className="error">
+                                            Use only alphabetic characters
+                                        </label>
+                                    )}
+                                </div>
+                            )}
+
+                            {projectCookie.level == 'organisation' && (
+                                <div
+                                    className={
+                                        !lastNameValid
+                                            ? 'form-group form-error'
+                                            : 'form-group'
+                                    }
+                                >
+                                    <label>Last name</label>
+                                    <span> *</span>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="Last name"
+                                        onChange={(e) => {
+                                            setLastName(e.target.value);
+                                        }}
+                                        value={lastName}
+                                    />
+                                    {!lastNameValid && (
+                                        <label className="error">
+                                            Use only alphabetic characters
+                                        </label>
+                                    )}
+                                </div>
+                            )}
+
+                            {projectCookie.level == 'organisation' && (
+                                <div
+                                    className={
+                                        !dobValid
+                                            ? 'form-group form-error'
+                                            : 'form-group'
+                                    }
+                                >
+                                    <label>Date Of Birth</label>
+                                    <span> *</span>
+                                    <input
+                                        type="date"
+                                        id="dob"
+                                        name="dob"
+                                        className="form-control"
+                                        placeholder="Pick DOB"
+                                        onChange={(e) => {
+                                            setDob(e.target.value);
+                                        }}
+                                        value={dob}
+                                    />
+                                    {!dobValid && (
+                                        <label className="error">
+                                            Enter the date in mm/dd/yyyy format
+                                        </label>
+                                    )}
+                                </div>
+                            )}
+
+                            {projectCookie.level == 'organisation' && (
+                                <div
+                                    className={
+                                        !genderValid
+                                            ? 'form-group form-error'
+                                            : 'form-group'
+                                    }
+                                >
+                                    <label>Gender</label>
+                                    <span> *</span>
+                                    <div className="form-check">
+                                        <input
+                                            className="form-check-input"
+                                            type="radio"
+                                            name="gender"
+                                            id="Male"
+                                            onChange={(e) => {
+                                                setGender(e.target.value);
+                                            }}
+                                            value="Male"
+                                            checked={
+                                                gender == 'Male' ? true : false
+                                            }
+                                        />
+                                        <label
+                                            className="form-check-label"
+                                            htmlFor="Male"
+                                        >
+                                            Male
+                                        </label>
+                                    </div>
+                                    <div className="form-check">
+                                        <input
+                                            className="form-check-input"
+                                            type="radio"
+                                            name="gender"
+                                            id="Female"
+                                            onChange={(e) => {
+                                                setGender(e.target.value);
+                                            }}
+                                            value="Female"
+                                            checked={
+                                                gender == 'Female'
+                                                    ? true
+                                                    : false
+                                            }
+                                        />
+                                        <label
+                                            className="form-check-label"
+                                            htmlFor="Female"
+                                        >
+                                            Female
+                                        </label>
+                                    </div>
+                                    <div
+                                        className={
+                                            !genderValid
+                                                ? 'form-check'
+                                                : 'form-group form-check'
+                                        }
+                                    >
+                                        <input
+                                            className="form-check-input"
+                                            type="radio"
+                                            name="gender"
+                                            id="Others"
+                                            onChange={(e) => {
+                                                setGender(e.target.value);
+                                            }}
+                                            value="Others"
+                                            checked={
+                                                gender == 'Others'
+                                                    ? true
+                                                    : false
+                                            }
+                                        />
+                                        <label
+                                            className="form-check-label"
+                                            htmlFor="Others"
+                                        >
+                                            Others
+                                        </label>
+                                    </div>
+
+                                    {!genderValid && (
+                                        <label className="error">
+                                            Select atleast one of the above
+                                            options
+                                        </label>
+                                    )}
+                                </div>
+                            )}
+
                             <div
                                 className={
                                     !hyperTensionValid

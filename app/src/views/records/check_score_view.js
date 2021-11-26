@@ -81,7 +81,11 @@ function CheckScoreView() {
         );
     };
 
-    if (isSelection == 'table' && groupTableData?.data?.length > 0) {
+    if (
+        isSelection == 'table' &&
+        groupTableData?.data?.length > 0 &&
+        projectCookie?.level != 'organisation'
+    ) {
         columns = [
             { dataField: 'time_created', text: 'Record Posted', sort: true },
             { dataField: 'hypertension', text: 'Hypertension', sort: true },
@@ -134,6 +138,74 @@ function CheckScoreView() {
                 text: 'Action',
                 formatter: linkFollow,
                 sort: true
+            },
+            {
+                dataField: 'time_stamp',
+                text: 'Time Stamp',
+                sort: true,
+                hidden: true
+            }
+        ];
+
+        defaultSorted = [
+            {
+                dataField: 'time_stamp',
+                order: 'desc'
+            }
+        ];
+    } else if (
+        isSelection == 'table' &&
+        groupTableData?.data?.length > 0 &&
+        projectCookie?.level == 'organisation'
+    ) {
+        columns = [
+            { dataField: 'time_created', text: 'Record Posted', sort: true },
+            { dataField: 'firstName', text: 'First Name', sort: true },
+            { dataField: 'lastName', text: 'Last Name', sort: true },
+            { dataField: 'age', text: 'Age', sort: true },
+            { dataField: 'gender', text: 'Gender', sort: true },
+            {
+                dataField: 'avg_glucose_level',
+                text: 'Average Glucose Level',
+                sort: true
+            },
+            { dataField: 'bmi', text: 'BMI', sort: true },
+            { dataField: 'score', text: 'Risk Score', sort: true },
+            {
+                dataField: 'hypertension',
+                text: 'Hypertension',
+                sort: true,
+                hidden: true
+            },
+            {
+                dataField: 'heart_disease',
+                text: 'Heart Disease Status',
+                sort: true,
+                hidden: true
+            },
+            {
+                dataField: 'ever_married',
+                text: 'Marital Status',
+                sort: true,
+                hidden: true
+            },
+            {
+                dataField: 'work_type',
+                text: 'Work Type',
+                sort: true,
+                hidden: true
+            },
+            {
+                dataField: 'Residence_type',
+                text: 'Residence Type',
+                sort: true,
+                hidden: true
+            },
+            {
+                dataField: 'smoking_status',
+                text: 'Smoking Habbits',
+                sort: true,
+                hidden: true
             },
             {
                 dataField: 'time_stamp',
