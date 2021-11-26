@@ -74,27 +74,57 @@ export default class RecordController {
                             if (err) {
                                 throw err;
                             }
-                            let params2 = {
-                                TableName: config.DATABASE_NAME,
-                                Item: {
-                                    PK: `GRP#${groupId}`,
-                                    SK: `REC#table#${recordId}`,
-                                    gender: bodyParams.gender,
-                                    age: bodyParams.age,
-                                    hypertension: bodyParams.hypertension,
-                                    heart_disease: bodyParams.heart_disease,
-                                    ever_married: bodyParams.ever_married,
-                                    work_type: bodyParams.work_type,
-                                    Residence_type: bodyParams.Residence_type,
-                                    avg_glucose_level:
-                                        bodyParams.avg_glucose_level,
-                                    bmi: bodyParams.bmi,
-                                    smoking_status: bodyParams.smoking_status,
-                                    time_created: bodyParams.time_created,
-                                    time_stamp: bodyParams.time_stamp,
-                                    score: Math.floor(results[0] * 100) + ' %'
-                                }
-                            };
+
+                            let params2;
+
+                            if(bodyParams.level == 'organisation'){
+                                params2 = {
+                                    TableName: config.DATABASE_NAME,
+                                    Item: {
+                                        PK: `GRP#${groupId}`,
+                                        SK: `REC#table#${recordId}`,
+                                        firstName: bodyParams.firstName,
+                                        lastName: bodyParams.lastName,
+                                        gender: bodyParams.gender,
+                                        age: bodyParams.age,
+                                        hypertension: bodyParams.hypertension,
+                                        heart_disease: bodyParams.heart_disease,
+                                        ever_married: bodyParams.ever_married,
+                                        work_type: bodyParams.work_type,
+                                        Residence_type: bodyParams.Residence_type,
+                                        avg_glucose_level:
+                                            bodyParams.avg_glucose_level,
+                                        bmi: bodyParams.bmi,
+                                        smoking_status: bodyParams.smoking_status,
+                                        time_created: bodyParams.time_created,
+                                        time_stamp: bodyParams.time_stamp,
+                                        score: Math.floor(results[0] * 100) + ' %'
+                                    }
+                                };
+                            }else{
+                                params2 = {
+                                    TableName: config.DATABASE_NAME,
+                                    Item: {
+                                        PK: `GRP#${groupId}`,
+                                        SK: `REC#table#${recordId}`,
+                                        gender: bodyParams.gender,
+                                        age: bodyParams.age,
+                                        hypertension: bodyParams.hypertension,
+                                        heart_disease: bodyParams.heart_disease,
+                                        ever_married: bodyParams.ever_married,
+                                        work_type: bodyParams.work_type,
+                                        Residence_type: bodyParams.Residence_type,
+                                        avg_glucose_level:
+                                            bodyParams.avg_glucose_level,
+                                        bmi: bodyParams.bmi,
+                                        smoking_status: bodyParams.smoking_status,
+                                        time_created: bodyParams.time_created,
+                                        time_stamp: bodyParams.time_stamp,
+                                        score: Math.floor(results[0] * 100) + ' %'
+                                    }
+                                };
+                            }
+                            
 
                             var documentClient =
                                 new AWS.DynamoDB.DocumentClient();
