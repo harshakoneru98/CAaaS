@@ -127,7 +127,11 @@ function CheckScoreView() {
                 order: 'desc'
             }
         ];
-    } else if (isSelection == 'image' && groupImageData?.data?.length > 0) {
+    } else if (
+        isSelection == 'image' &&
+        groupImageData?.data?.length > 0 &&
+        projectCookie?.level != 'organisation'
+    ) {
         columns = [
             { dataField: 'lastModified', text: 'Record Posted', sort: true },
             { dataField: 'name', text: 'File Name', sort: true },
@@ -221,8 +225,41 @@ function CheckScoreView() {
                 order: 'desc'
             }
         ];
-    }
+    } else if (
+        isSelection == 'image' &&
+        groupImageData?.data?.length > 0 &&
+        projectCookie?.level == 'organisation'
+    ) {
+        columns = [
+            { dataField: 'lastModified', text: 'Record Posted', sort: true },
+            { dataField: 'firstName', text: 'First Name', sort: true },
+            { dataField: 'lastName', text: 'Last Name', sort: true },
+            { dataField: 'age', text: 'Age', sort: true },
+            { dataField: 'gender', text: 'Gender', sort: true },
+            { dataField: 'name', text: 'File Name', sort: true },
+            { dataField: 'size', text: 'size (KB)', sort: true },
+            { dataField: 'score', text: 'Risk Score', sort: true },
+            {
+                dataField: 'url',
+                text: 'Action',
+                formatter: linkFollow,
+                sort: true
+            },
+            {
+                dataField: 'time_stamp',
+                text: 'Time Stamp',
+                sort: true,
+                hidden: true
+            }
+        ];
 
+        defaultSorted = [
+            {
+                dataField: 'time_stamp',
+                order: 'desc'
+            }
+        ];
+    }
     useEffect(() => {
         if (isSelection == 'table') {
             dispatch(GetGroupDataTableThunk(projectCookie.email));
