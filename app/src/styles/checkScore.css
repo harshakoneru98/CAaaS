@@ -10,3 +10,7 @@
 .check-score .table-bordered{
     width: 99% !important;
 }
+
+.noRecords{
+    margin-top: 5em;
+}

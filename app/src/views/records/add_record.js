@@ -291,7 +291,41 @@ function AddRecord() {
     ));
 
     let uploadFile = async () => {
-        if (files[0]) {
+        if (projectCookie.level == 'organisation') {
+            if (nameRegrex.test(firstName)) {
+                setFirstNameValid(true);
+            } else {
+                setFirstNameValid(false);
+            }
+
+            if (nameRegrex.test(lastName)) {
+                setLastNameValid(true);
+            } else {
+                setLastNameValid(false);
+            }
+
+            if (dob != '') {
+                setDobValid(true);
+            } else {
+                setDobValid(false);
+            }
+
+            if (gender != '') {
+                setGenderValid(true);
+            } else {
+                setGenderValid(false);
+            }
+        }
+
+        if (
+            files[0] &&
+            (projectCookie?.level != 'organisation' ||
+                (projectCookie?.level == 'organisation' &&
+                    nameRegrex.test(firstName) &&
+                    nameRegrex.test(lastName) &&
+                    dob != '' &&
+                    gender != ''))
+        ) {
             setUploadStatus(true);
             const formData = new FormData();
 
@@ -316,6 +350,17 @@ function AddRecord() {
             formData.append('level', projectCookie?.level);
             formData.append('email', projectCookie?.email);
 
+            if (projectCookie.level == 'organisation') {
+                formData.append('firstName', firstName);
+                formData.append('lastName', lastName);
+                formData.append('dob', dob);
+                formData.append(
+                    'age',
+                    moment().diff(moment(dob, 'YYYY-MM-DD'), 'years').toString()
+                );
+                formData.append('gender', gender);
+            }
+
             await fetch('http://localhost:8080/api/record/create/image/', {
                 method: 'POST',
                 body: formData
@@ -333,6 +378,7 @@ function AddRecord() {
             setShowPopUp(true);
             setRecordStatus(myCache.mget(['recordStatus']).recordStatus);
             window.scrollTo(0, 0);
+            setIsStatus(!isStatus);
         }
     };
 
@@ -1140,6 +1186,181 @@ function AddRecord() {
                                 uploadStatus ? 'wrapper images' : 'wrapper'
                             }
                         >
+                            {projectCookie.level == 'organisation' && (
+                                <div
+                                    className={
+                                        !firstNameValid
+                                            ? 'form-group form-error'
+                                            : 'form-group'
+                                    }
+                                >
+                                    <label>First name</label>
+                                    <span> *</span>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="First name"
+                                        onChange={(e) => {
+                                            setFirstName(e.target.value);
+                                        }}
+                                        value={firstName}
+                                    />
+                                    {!firstNameValid && (
+                                        <label className="error">
+                                            Use only alphabetic characters
+                                        </label>
+                                    )}
+                                </div>
+                            )}
+
+                            {projectCookie.level == 'organisation' && (
+                                <div
+                                    className={
+                                        !lastNameValid
+                                            ? 'form-group form-error'
+                                            : 'form-group'
+                                    }
+                                >
+                                    <label>Last name</label>
+                                    <span> *</span>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="Last name"
+                                        onChange={(e) => {
+                                            setLastName(e.target.value);
+                                        }}
+                                        value={lastName}
+                                    />
+                                    {!lastNameValid && (
+                                        <label className="error">
+                                            Use only alphabetic characters
+                                        </label>
+                                    )}
+                                </div>
+                            )}
+
+                            {projectCookie.level == 'organisation' && (
+                                <div
+                                    className={
+                                        !dobValid
+                                            ? 'form-group form-error'
+                                            : 'form-group'
+                                    }
+                                >
+                                    <label>Date Of Birth</label>
+                                    <span> *</span>
+                                    <input
+                                        type="date"
+                                        id="dob"
+                                        name="dob"
+                                        className="form-control"
+                                        placeholder="Pick DOB"
+                                        onChange={(e) => {
+                                            setDob(e.target.value);
+                                        }}
+                                        value={dob}
+                                    />
+                                    {!dobValid && (
+                                        <label className="error">
+                                            Enter the date in mm/dd/yyyy format
+                                        </label>
+                                    )}
+                                </div>
+                            )}
+
+                            {projectCookie.level == 'organisation' && (
+                                <div
+                                    className={
+                                        !genderValid
+                                            ? 'form-group form-error'
+                                            : 'form-group'
+                                    }
+                                >
+                                    <label>Gender</label>
+                                    <span> *</span>
+                                    <div className="form-check">
+                                        <input
+                                            className="form-check-input"
+                                            type="radio"
+                                            name="gender"
+                                            id="Male"
+                                            onChange={(e) => {
+                                                setGender(e.target.value);
+                                            }}
+                                            value="Male"
+                                            checked={
+                                                gender == 'Male' ? true : false
+                                            }
+                                        />
+                                        <label
+                                            className="form-check-label"
+                                            htmlFor="Male"
+                                        >
+                                            Male
+                                        </label>
+                                    </div>
+                                    <div className="form-check">
+                                        <input
+                                            className="form-check-input"
+                                            type="radio"
+                                            name="gender"
+                                            id="Female"
+                                            onChange={(e) => {
+                                                setGender(e.target.value);
+                                            }}
+                                            value="Female"
+                                            checked={
+                                                gender == 'Female'
+                                                    ? true
+                                                    : false
+                                            }
+                                        />
+                                        <label
+                                            className="form-check-label"
+                                            htmlFor="Female"
+                                        >
+                                            Female
+                                        </label>
+                                    </div>
+                                    <div
+                                        className={
+                                            !genderValid
+                                                ? 'form-check'
+                                                : 'form-group form-check'
+                                        }
+                                    >
+                                        <input
+                                            className="form-check-input"
+                                            type="radio"
+                                            name="gender"
+                                            id="Others"
+                                            onChange={(e) => {
+                                                setGender(e.target.value);
+                                            }}
+                                            value="Others"
+                                            checked={
+                                                gender == 'Others'
+                                                    ? true
+                                                    : false
+                                            }
+                                        />
+                                        <label
+                                            className="form-check-label"
+                                            htmlFor="Others"
+                                        >
+                                            Others
+                                        </label>
+                                    </div>
+
+                                    {!genderValid && (
+                                        <label className="error">
+                                            Select atleast one of the above
+                                            options
+                                        </label>
+                                    )}
+                                </div>
+                            )}
                             <div className="container">
                                 <h4>Upload a image file</h4>
                                 <div className="upload-container">

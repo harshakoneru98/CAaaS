@@ -2,6 +2,9 @@
     margin: auto;
     max-width: 640px;
     padding-top: 20px;
+  }
+
+  .wrapper .container{
     text-align: center;
   }
   
@@ -58,3 +61,7 @@
   #file-upload{
       display: none;
   }
+
+  /* .wrapper .form-group label{
+    text-align: left;
+  } */

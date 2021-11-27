@@ -77,7 +77,7 @@ export default class RecordController {
 
                             let params2;
 
-                            if(bodyParams.level == 'organisation'){
+                            if (bodyParams.level == 'organisation') {
                                 params2 = {
                                     TableName: config.DATABASE_NAME,
                                     Item: {
@@ -91,17 +91,20 @@ export default class RecordController {
                                         heart_disease: bodyParams.heart_disease,
                                         ever_married: bodyParams.ever_married,
                                         work_type: bodyParams.work_type,
-                                        Residence_type: bodyParams.Residence_type,
+                                        Residence_type:
+                                            bodyParams.Residence_type,
                                         avg_glucose_level:
                                             bodyParams.avg_glucose_level,
                                         bmi: bodyParams.bmi,
-                                        smoking_status: bodyParams.smoking_status,
+                                        smoking_status:
+                                            bodyParams.smoking_status,
                                         time_created: bodyParams.time_created,
                                         time_stamp: bodyParams.time_stamp,
-                                        score: Math.floor(results[0] * 100) + ' %'
+                                        score:
+                                            Math.floor(results[0] * 100) + ' %'
                                     }
                                 };
-                            }else{
+                            } else {
                                 params2 = {
                                     TableName: config.DATABASE_NAME,
                                     Item: {
@@ -113,18 +116,20 @@ export default class RecordController {
                                         heart_disease: bodyParams.heart_disease,
                                         ever_married: bodyParams.ever_married,
                                         work_type: bodyParams.work_type,
-                                        Residence_type: bodyParams.Residence_type,
+                                        Residence_type:
+                                            bodyParams.Residence_type,
                                         avg_glucose_level:
                                             bodyParams.avg_glucose_level,
                                         bmi: bodyParams.bmi,
-                                        smoking_status: bodyParams.smoking_status,
+                                        smoking_status:
+                                            bodyParams.smoking_status,
                                         time_created: bodyParams.time_created,
                                         time_stamp: bodyParams.time_stamp,
-                                        score: Math.floor(results[0] * 100) + ' %'
+                                        score:
+                                            Math.floor(results[0] * 100) + ' %'
                                     }
                                 };
                             }
-                            
 
                             var documentClient =
                                 new AWS.DynamoDB.DocumentClient();
@@ -213,23 +218,59 @@ export default class RecordController {
                                 if (err) {
                                     throw err;
                                 }
+                                let params1;
 
-                                let params1 = {
-                                    TableName: config.DATABASE_NAME,
-                                    Item: {
-                                        PK: `GRP#${groupId}`,
-                                        SK: `REC#image#${recordId}`,
-                                        name: req_params.fileName.split('-')[1],
-                                        size:
-                                            Math.round(
-                                                (req_params.size * 10) / 1024
-                                            ) / 10,
-                                        lastModified: req_params.lastModified,
-                                        url: url,
-                                        time_stamp: req_params.time_stamp,
-                                        score: Math.floor(results[0] * 100) + ' %'
-                                    }
-                                };
+                                if (req_params.level == 'personal') {
+                                    params1 = {
+                                        TableName: config.DATABASE_NAME,
+                                        Item: {
+                                            PK: `GRP#${groupId}`,
+                                            SK: `REC#image#${recordId}`,
+                                            name: req_params.fileName.split(
+                                                '-'
+                                            )[1],
+                                            size:
+                                                Math.round(
+                                                    (req_params.size * 10) /
+                                                        1024
+                                                ) / 10,
+                                            lastModified:
+                                                req_params.lastModified,
+                                            url: url,
+                                            time_stamp: req_params.time_stamp,
+                                            score:
+                                                Math.floor(results[0] * 100) +
+                                                ' %'
+                                        }
+                                    };
+                                } else {
+                                    params1 = {
+                                        TableName: config.DATABASE_NAME,
+                                        Item: {
+                                            PK: `GRP#${groupId}`,
+                                            SK: `REC#image#${recordId}`,
+                                            firstName: req_params.firstName,
+                                            lastName: req_params.lastName,
+                                            gender: req_params.gender,
+                                            age: req_params.age,
+                                            name: req_params.fileName.split(
+                                                '-'
+                                            )[1],
+                                            size:
+                                                Math.round(
+                                                    (req_params.size * 10) /
+                                                        1024
+                                                ) / 10,
+                                            lastModified:
+                                                req_params.lastModified,
+                                            url: url,
+                                            time_stamp: req_params.time_stamp,
+                                            score:
+                                                Math.floor(results[0] * 100) +
+                                                ' %'
+                                        }
+                                    };
+                                }
 
                                 var documentClient =
                                     new AWS.DynamoDB.DocumentClient();
