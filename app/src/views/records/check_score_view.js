@@ -348,6 +348,14 @@ function CheckScoreView() {
                     )}
                 </ToolkitProvider>
             )}
+
+            {((groupTableData?.data?.length == 0 && isSelection == 'table') ||
+                (groupImageData?.data?.length == 0 &&
+                    isSelection == 'image')) && (
+                <div>
+                    <div className="noRecords">No Records found.</div>
+                </div>
+            )}
         </div>
     );
 }
