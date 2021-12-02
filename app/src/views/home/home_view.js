@@ -31,6 +31,11 @@ function HomeView() {
                             </p>
                             <hr />
                             <p>
+                                99% of hypertension and stroke instances were
+                                detected by a simple screening using the model –
+                                <b> McKinsey</b>
+                            </p>
+                            <p>
                                 70% of global severe cardiovascular disease
                                 casualties occur in low and middle income
                                 countries – <b>WHO</b>
